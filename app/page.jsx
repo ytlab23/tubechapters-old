@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
     <div className="box absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  bg-white sm:p-16 px-4 py-16 text-center flex flex-col gap-y-8 rounded-xl w-[95%] md:max-w-[800px]">
