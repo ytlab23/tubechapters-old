@@ -59,8 +59,8 @@ const Form = ({ getSummery }) => {
         {loading ? <span className="loader"></span> : "Generate"}
       </button>
       {data.length > 0 && (
-        <div className="flex flex-col gap-y-4 my-4 bg-back p-8 rounded-lg">
-          <div className="flex justify-between gap-x-3 items-start w-full">
+        <div className="flex flex-col gap-y-4 my-4 bg-back md:p-8 px-4 py-8 rounded-lg">
+          <div className="flex sm:flex-row flex-col gap-y-3 justify-between gap-x-3 items-start w-full">
             <div className="flex flex-col gap-y-2 text-left">
               {data?.map((item, index) => (
                 <p className="text-sm text-primary" key={index}>
@@ -78,7 +78,7 @@ const Form = ({ getSummery }) => {
           </div>
 
           <button
-            className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-sm rounded-xl max-w-[150px] self-center min-w-[100px]"
+            className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-sm rounded-xl max-w-[150px] self-center min-w-[100px] my-4"
             onClick={() => {
               setShowDesc(true);
             }}
@@ -87,7 +87,7 @@ const Form = ({ getSummery }) => {
           </button>
 
           {showDesc && (
-            <div className="flex justify-between gap-x-3 items-start w-full my-4">
+            <div className="flex sm:flex-row flex-col gap-y-3 justify-between gap-x-3 items-start w-full my-4">
               <p className="text-sm text-primary text-left">{desc}</p>
               <div
                 className="btn flex items-center gap-x-2 px-4 py-2  bg-red-600 cursor-pointer rounded-lg"
