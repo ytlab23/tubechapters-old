@@ -25,7 +25,14 @@ export const generateSummary = async (subtitles) => {
   });
   try {
     let subtitlesString = subtitles
-      .map((subtitle) => `${subtitle.offset} ${subtitle.text}`)
+      .map((subtitle) => {
+        const minutes = Math.floor(Number(subtitle.offset) / 60);
+        const remainingSeconds = Math.round(Number(subtitle.offset) % 60);
+        const time = `${minutes}:${
+          remainingSeconds < 10 ? "0" : ""
+        }${remainingSeconds}`;
+        return `${time} ${subtitle.text}`;
+      })
       .join("\n");
 
     subtitlesString = subtitlesString.replace(/&#39;/g, "'");
