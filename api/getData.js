@@ -1,4 +1,4 @@
-// import axios from "axios";
+import axios from "axios";
 import jsdom from "jsdom";
 const { JSDOM } = jsdom;
 import xml2js from "xml2js";
@@ -7,7 +7,7 @@ import OpenAI from "openai";
 export const get_data = async (url) => {
   "use server";
   try {
-    const response = await fetch(url);
+    const response = await axios.get(url);
     const data = await response.data;
     return data;
   } catch (err) {
@@ -130,6 +130,7 @@ export const fetchTranscript = async (url) => {
         subtitle = parsed_subtitles;
       }
     });
+    console.log(subtitle);
     return subtitle;
   } else {
     return "No suitable subtitles found.";
