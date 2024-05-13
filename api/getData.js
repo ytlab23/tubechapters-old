@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import jsdom from "jsdom";
 const { JSDOM } = jsdom;
 import xml2js from "xml2js";
@@ -7,7 +7,7 @@ import OpenAI from "openai";
 export const get_data = async (url) => {
   "use server";
   try {
-    const response = await axios.get(url);
+    const response = await fetch(url);
     const data = await response.data;
     return data;
   } catch (err) {
