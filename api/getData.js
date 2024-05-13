@@ -88,57 +88,57 @@ After creating the chapters, provide a short summarized description of the video
   }
 };
 
-export const fetchTranscript = async (url) => {
-  "use server";
-  const html = await get_data(url);
-  const dom = new JSDOM(html);
-  const scripts = dom.window.document.querySelectorAll("script");
-  let captions = [];
+// export const fetchTranscript = async (url) => {
+//   "use server";
+//   const html = await get_data(url);
+//   const dom = new JSDOM(html);
+//   const scripts = dom.window.document.querySelectorAll("script");
+//   let captions = [];
 
-  for (let script of scripts) {
-    if (script.innerHTML.includes("captionTracks")) {
-      console.log("scripts", script);
-      const start = script.innerHTML.indexOf("captionTracks");
+//   for (let script of scripts) {
+//     if (script.innerHTML.includes("captionTracks")) {
+//       console.log("scripts", script);
+//       const start = script.innerHTML.indexOf("captionTracks");
 
-      const end = script.innerHTML.indexOf("]", start);
-      const jsonString = script.innerHTML
-        .slice(start, end + 1)
-        .replace('captionTracks":', "");
-      captions = JSON.parse(jsonString);
-      break;
-    }
-  }
+//       const end = script.innerHTML.indexOf("]", start);
+//       const jsonString = script.innerHTML
+//         .slice(start, end + 1)
+//         .replace('captionTracks":', "");
+//       captions = JSON.parse(jsonString);
+//       break;
+//     }
+//   }
 
-  if (captions.length > 0) {
-    const selected_caption = captions[0];
-    const subtitles_data = await get_data(selected_caption.baseUrl);
-    let subtitle = "";
-    xml2js.parseString(subtitles_data, async (err, result) => {
-      if (err) {
-        res.send("Error parsing XML.");
-      } else {
-        // console.log(result.transcript.text);
-        const parsed_subtitles = result.transcript.text.map((item) => {
-          const minutes = Math.floor(Number(item.$.start) / 60);
-          const remainingSeconds = Math.round(Number(item.$.start) % 60);
-          const time = `${minutes}:${
-            remainingSeconds < 10 ? "0" : ""
-          }${remainingSeconds}`;
-          // const time =  convertToMinutes(item.$.start);
-          const lines = item._;
-          const arr = { time, lines };
-          return arr;
-        });
-        subtitle = parsed_subtitles;
-      }
-    });
-    console.log(subtitle);
-    return subtitle;
-  } else {
-    console.log("No suitable subtitles found.");
-    return "No suitable subtitles found.";
-  }
-};
+//   if (captions.length > 0) {
+//     const selected_caption = captions[0];
+//     const subtitles_data = await get_data(selected_caption.baseUrl);
+//     let subtitle = "";
+//     xml2js.parseString(subtitles_data, async (err, result) => {
+//       if (err) {
+//         res.send("Error parsing XML.");
+//       } else {
+//         // console.log(result.transcript.text);
+//         const parsed_subtitles = result.transcript.text.map((item) => {
+//           const minutes = Math.floor(Number(item.$.start) / 60);
+//           const remainingSeconds = Math.round(Number(item.$.start) % 60);
+//           const time = `${minutes}:${
+//             remainingSeconds < 10 ? "0" : ""
+//           }${remainingSeconds}`;
+//           // const time =  convertToMinutes(item.$.start);
+//           const lines = item._;
+//           const arr = { time, lines };
+//           return arr;
+//         });
+//         subtitle = parsed_subtitles;
+//       }
+//     });
+//     console.log(subtitle);
+//     return subtitle;
+//   } else {
+//     console.log("No suitable subtitles found.");
+//     return "No suitable subtitles found.";
+//   }
+// };
 
 export const getSummery = async (url) => {
   "use server";
