@@ -25,7 +25,7 @@ export const generateSummary = async (subtitles) => {
   });
   try {
     let subtitlesString = subtitles
-      .map((subtitle) => `${subtitle.time} ${subtitle.lines}`)
+      .map((subtitle) => `${subtitle.offset} ${subtitle.text}`)
       .join("\n");
 
     subtitlesString = subtitlesString.replace(/&#39;/g, "'");
