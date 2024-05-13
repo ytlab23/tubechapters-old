@@ -46,7 +46,7 @@ const Form = ({ getSummery }) => {
             setLoading(true);
             let data = await getSummery(url);
             const last = data.length;
-            let description = data?.slice(last - 3, last + 1);
+            let description = data?.slice(last - 2, last + 1);
             setDesc(description?.join("\n"));
             data = data?.slice(0, last - 2);
             console.log("description", description);
