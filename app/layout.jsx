@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import Nav from "@/components/Nav";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,19 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.className} md:px-16 px-2 bg-back`}>
-        <nav className="flex items-center justify-around py-4">
-          <Link href="/" className="text-2xl font-bold text-[#dc2626]">
-            tubechapters
-          </Link>
-          <div className="flex gap-x-8 items-center">
-            <Link href="/" className="text-primary text-base font-normal">
-              Help
-            </Link>
-            <Link href="/" className="text-primary text-base font-normal">
-              About
-            </Link>
-          </div>
-        </nav>
+        <Nav />
         <div className="min-h-full flex justify-center items-center relative mb-6 mt-12">
           {children}
         </div>
