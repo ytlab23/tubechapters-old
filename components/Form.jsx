@@ -31,14 +31,16 @@ const Form = ({ getSummery }) => {
             setData([]);
             setLoading(true);
             let data = await getSummery(url);
-            const last = data.length;
-            let description = data?.slice(last - 2, last + 1);
-            setDesc(description?.join("\n"));
-            data = data?.slice(0, last - 2);
-            console.log("description", description);
-            console.log("data", data);
-            setLoading(false);
-            setData(data);
+            if (data) {
+              const last = data?.length;
+              let description = data?.slice(last - 2, last + 1);
+              setDesc(description?.join("\n"));
+              data = data?.slice(0, last - 2);
+              console.log("description", description);
+              console.log("data", data);
+              setLoading(false);
+              setData(data);
+            }
           }
         }}
       >
@@ -57,7 +59,7 @@ const Form = ({ getSummery }) => {
             <CopyHandler
               setCopyText={setCopyText}
               setDescText={setDescText}
-              copyData={data.join("\n")}
+              copyData={data?.join("\n")}
               format="timestamps"
               title={copyText}
             />
