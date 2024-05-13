@@ -4,6 +4,8 @@ const { JSDOM } = jsdom;
 import xml2js from "xml2js";
 import OpenAI from "openai";
 
+import { YoutubeTranscript } from "youtube-transcript";
+
 export const get_data = async (url) => {
   "use server";
   try {
@@ -133,13 +135,16 @@ export const fetchTranscript = async (url) => {
     console.log(subtitle);
     return subtitle;
   } else {
+    console.log("No suitable subtitles found.");
     return "No suitable subtitles found.";
   }
 };
 
 export const getSummery = async (url) => {
   "use server";
-  const transcript = await fetchTranscript(url);
+  // const transcript = await fetchTranscript(url);
+  const transcript = await YoutubeTranscript.fetchTranscript(url);
+  console.log("transcipt", transcript);
   const summary = await generateSummary(transcript);
 
   return summary;
