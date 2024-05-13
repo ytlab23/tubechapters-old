@@ -26,7 +26,9 @@ export default function RootLayout({ children }) {
             </Link>
           </div>
         </nav>
-        {children}
+        <div className="min-h-full flex justify-center items-center relative mb-6 mt-12">
+          {children}
+        </div>
       </body>
     </html>
   );
