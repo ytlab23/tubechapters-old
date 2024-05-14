@@ -29,13 +29,15 @@ export const generateSummary = async (subtitles) => {
   const openai = new OpenAI({
     apiKey: process.env.API_KEY,
   });
-  console.log(subtitles);
+
   try {
     let subtitlesString = subtitles
       .map((subtitle) => `${subtitle.time} ${subtitle.lines}`)
       .join("\n");
 
     subtitlesString = subtitlesString.replace(/&#39;/g, "'");
+
+    console.log(subtitles);
 
     const complexPrompt = `
   Given the following video transcript:
@@ -74,7 +76,7 @@ After creating the chapters, provide a short summarized description of the video
         },
       ],
       max_tokens: 500,
-      model: "gpt-4-turbo",
+      model: "gpt-3-turbo",
     });
 
     let gptResponse = result.choices[0].message.content;
