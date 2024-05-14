@@ -16,7 +16,7 @@ export const get_data = async (url) => {
       },
     });
     const data = await response.data;
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (err) {
     console.log("error", err);
@@ -36,8 +36,9 @@ export const generateSummary = async (subtitles) => {
       .join("\n");
 
     subtitlesString = subtitlesString.replace(/&#39;/g, "'");
+    console.log(subtitlesString);
 
-    console.log(subtitles);
+    // console.log(subtitles);
 
     const complexPrompt = `
   Given the following video transcript:
@@ -76,10 +77,12 @@ After creating the chapters, provide a short summarized description of the video
         },
       ],
       max_tokens: 500,
-      model: "gpt-3-turbo",
+      model: "gpt-4-turbo",
     });
 
     let gptResponse = result.choices[0].message.content;
+
+    console.log("gpt response", gptResponse);
 
     let startOfHeading = gptResponse.indexOf("0:00");
 
@@ -141,7 +144,7 @@ export const fetchTranscript = async (url) => {
         subtitle = parsed_subtitles;
       }
     });
-    console.log("subtitle", subtitle);
+    // console.log("subtitle", subtitle);
     return subtitle;
   } else {
     console.log("No suitable subtitles found.");
@@ -153,7 +156,7 @@ export const getSummery = async (url) => {
   "use server";
   const transcript = await fetchTranscript(url);
   // const transcript = await YoutubeTranscript.fetchTranscript(url);
-  console.log("transcipt", transcript);
+  // console.log("transcipt", transcript);
   const summary = await generateSummary(transcript);
 
   return summary;
