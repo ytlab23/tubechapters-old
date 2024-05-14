@@ -31,7 +31,7 @@ export const get_data = async (url) => {
       },
     });
     const data = await response.data;
-    // console.log(data);
+    console.log("Data", data);
     return data;
   } catch (err) {
     console.log("error", err);
