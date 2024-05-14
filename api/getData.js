@@ -6,13 +6,28 @@ import OpenAI from "openai";
 
 // import { YoutubeTranscript } from "youtube-transcript";
 
+const platforms = [
+  "Macintosh; Intel Mac OS X 10_15_7",
+  "Windows NT 10.0; Win64; x64",
+  "Linux x86_64",
+];
+
+const browsers = [
+  "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+  "Gecko/20100101 Firefox/89.0",
+  "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Safari/605.1.15",
+];
+
 export const get_data = async (url) => {
   "use server";
   try {
+    const randomPlatform =
+      platforms[Math.floor(Math.random() * platforms.length)];
+    const randomBrowser = browsers[Math.floor(Math.random() * browsers.length)];
+    const userAgent = `Mozilla/5.0 (${randomPlatform}) ${randomBrowser}`;
     const response = await axios.get(url, {
       headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0", // Firefox on Windows
+        "User-Agent": userAgent, // Firefox on Windows
       },
     });
     const data = await response.data;
