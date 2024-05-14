@@ -4,12 +4,17 @@ const { JSDOM } = jsdom;
 import xml2js from "xml2js";
 import OpenAI from "openai";
 
-import { YoutubeTranscript } from "youtube-transcript";
+// import { YoutubeTranscript } from "youtube-transcript";
 
 export const get_data = async (url) => {
   "use server";
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+      },
+    });
     const data = await response.data;
     return data;
   } catch (err) {
@@ -20,19 +25,13 @@ export const get_data = async (url) => {
 export const generateSummary = async (subtitles) => {
   "use server";
   // Convert the subtitles to a string
-  const openai = new OpenAI({
-    apiKey: process.env.API_KEY,
-  });
+  // const openai = new OpenAI({
+  //   apiKey: process.env.API_KEY,
+  // });
+  console.log(subtitles);
   try {
     let subtitlesString = subtitles
-      .map((subtitle) => {
-        const minutes = Math.floor(Number(subtitle.offset) / 60);
-        const remainingSeconds = Math.round(Number(subtitle.offset) % 60);
-        const time = `${minutes}:${
-          remainingSeconds < 10 ? "0" : ""
-        }${remainingSeconds}`;
-        return `${time} ${subtitle.text}`;
-      })
+      .map((subtitle) => `${subtitle.time} ${subtitle.lines}`)
       .join("\n");
 
     subtitlesString = subtitlesString.replace(/&#39;/g, "'");
@@ -66,91 +65,91 @@ After creating the chapters, provide a short summarized description of the video
 `;
 
     // Send the subtitles to OpenAIs
-    const result = await openai.chat.completions.create({
-      messages: [
-        {
-          role: "system",
-          content: simplePrompt,
-        },
-      ],
-      max_tokens: 500,
-      model: "gpt-4-turbo",
-    });
+    // const result = await openai.chat.completions.create({
+    //   messages: [
+    //     {
+    //       role: "system",
+    //       content: simplePrompt,
+    //     },
+    //   ],
+    //   max_tokens: 500,
+    //   model: "gpt-4-turbo",
+    // });
 
-    let gptResponse = result.choices[0].message.content;
+    // let gptResponse = result.choices[0].message.content;
 
-    let startOfHeading = gptResponse.indexOf("0:00");
+    // let startOfHeading = gptResponse.indexOf("0:00");
 
-    if (startOfHeading) {
-      gptResponse = gptResponse.slice(startOfHeading).split("\n");
-    } else {
-      gptResponse = gptResponse.split("\n");
-    }
+    // if (startOfHeading) {
+    //   gptResponse = gptResponse.slice(startOfHeading).split("\n");
+    // } else {
+    //   gptResponse = gptResponse.split("\n");
+    // }
 
-    console.log(gptResponse);
+    // console.log(gptResponse);
 
-    return gptResponse;
+    return subtitlesString;
   } catch (error) {
     console.log("not subtitles was found");
   }
 };
 
-// export const fetchTranscript = async (url) => {
-//   "use server";
-//   const html = await get_data(url);
-//   const dom = new JSDOM(html);
-//   const scripts = dom.window.document.querySelectorAll("script");
-//   let captions = [];
+export const fetchTranscript = async (url) => {
+  "use server";
+  const html = await get_data(url);
+  const dom = new JSDOM(html);
+  const scripts = dom.window.document.querySelectorAll("script");
+  let captions = [];
 
-//   for (let script of scripts) {
-//     if (script.innerHTML.includes("captionTracks")) {
-//       console.log("scripts", script);
-//       const start = script.innerHTML.indexOf("captionTracks");
+  for (let script of scripts) {
+    if (script.innerHTML.includes("captionTracks")) {
+      console.log("scripts", script);
+      const start = script.innerHTML.indexOf("captionTracks");
 
-//       const end = script.innerHTML.indexOf("]", start);
-//       const jsonString = script.innerHTML
-//         .slice(start, end + 1)
-//         .replace('captionTracks":', "");
-//       captions = JSON.parse(jsonString);
-//       break;
-//     }
-//   }
+      const end = script.innerHTML.indexOf("]", start);
+      const jsonString = script.innerHTML
+        .slice(start, end + 1)
+        .replace('captionTracks":', "");
+      captions = JSON.parse(jsonString);
+      break;
+    }
+  }
 
-//   if (captions.length > 0) {
-//     const selected_caption = captions[0];
-//     const subtitles_data = await get_data(selected_caption.baseUrl);
-//     let subtitle = "";
-//     xml2js.parseString(subtitles_data, async (err, result) => {
-//       if (err) {
-//         res.send("Error parsing XML.");
-//       } else {
-//         // console.log(result.transcript.text);
-//         const parsed_subtitles = result.transcript.text.map((item) => {
-//           const minutes = Math.floor(Number(item.$.start) / 60);
-//           const remainingSeconds = Math.round(Number(item.$.start) % 60);
-//           const time = `${minutes}:${
-//             remainingSeconds < 10 ? "0" : ""
-//           }${remainingSeconds}`;
-//           // const time =  convertToMinutes(item.$.start);
-//           const lines = item._;
-//           const arr = { time, lines };
-//           return arr;
-//         });
-//         subtitle = parsed_subtitles;
-//       }
-//     });
-//     console.log(subtitle);
-//     return subtitle;
-//   } else {
-//     console.log("No suitable subtitles found.");
-//     return "No suitable subtitles found.";
-//   }
-// };
+  if (captions.length > 0) {
+    const selected_caption = captions[0];
+    const subtitles_data = await get_data(selected_caption.baseUrl);
+    let subtitle = "";
+    xml2js.parseString(subtitles_data, async (err, result) => {
+      if (err) {
+        res.send("Error parsing XML.");
+      } else {
+        // console.log(result.transcript.text);
+        const parsed_subtitles = result.transcript.text.map((item) => {
+          const minutes = Math.floor(Number(item.$.start) / 60);
+          const remainingSeconds = Math.round(Number(item.$.start) % 60);
+          const time = `${minutes}:${
+            remainingSeconds < 10 ? "0" : ""
+          }${remainingSeconds}`;
+          // const time =  convertToMinutes(item.$.start);
+          const lines = item._;
+          const arr = { time, lines };
+          return arr;
+        });
+        subtitle = parsed_subtitles;
+      }
+    });
+    console.log("subtitle", subtitle);
+    return subtitle;
+  } else {
+    console.log("No suitable subtitles found.");
+    return "No suitable subtitles found.";
+  }
+};
 
 export const getSummery = async (url) => {
   "use server";
-  // const transcript = await fetchTranscript(url);
-  const transcript = await YoutubeTranscript.fetchTranscript(url);
+  const transcript = await fetchTranscript(url);
+  // const transcript = await YoutubeTranscript.fetchTranscript(url);
   console.log("transcipt", transcript);
   const summary = await generateSummary(transcript);
 
