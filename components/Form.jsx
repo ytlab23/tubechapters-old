@@ -11,6 +11,7 @@ const Form = ({ getSummery }) => {
   const [descText, setDescText] = useState("Copy");
   const [desc, setDesc] = useState("");
   const [showDesc, setShowDesc] = useState(false);
+  const [error, setError] = useState(false);
 
   return (
     <div className="flex flex-col gap-y-4 mt-24">
@@ -31,22 +32,24 @@ const Form = ({ getSummery }) => {
             setData([]);
             setLoading(true);
             let data = await getSummery(url);
-            // console.log("data====>", data);
             if (data) {
               setLoading(false);
+              setError(false);
               const last = data?.length;
               let description = data?.slice(last - 2, last + 1);
               setDesc(description?.join("\n"));
               data = data?.slice(0, last - 2);
-              // console.log("description", description);
-              // console.log("data", data);
               setData(data);
+            } else {
+              setLoading(false);
+              setError(true);
             }
           }
         }}
       >
         {loading ? <span className="loader"></span> : "Generate"}
       </button>
+      {error && <p className="text-sm text-red-600 text-left">Error accured</p>}
       {data.length > 0 && (
         <div className="flex flex-col gap-y-4 my-4 bg-back md:p-8 px-4 py-8 rounded-lg">
           <ResultContainer>

@@ -129,14 +129,12 @@ export const fetchTranscript = async (url) => {
       if (err) {
         res.send("Error parsing XML.");
       } else {
-        // console.log(result.transcript.text);
         const parsed_subtitles = result.transcript.text.map((item) => {
           const minutes = Math.floor(Number(item.$.start) / 60);
           const remainingSeconds = Math.round(Number(item.$.start) % 60);
           const time = `${minutes}:${
             remainingSeconds < 10 ? "0" : ""
           }${remainingSeconds}`;
-          // const time =  convertToMinutes(item.$.start);
           const lines = item._;
           const arr = { time, lines };
           return arr;
@@ -144,7 +142,6 @@ export const fetchTranscript = async (url) => {
         subtitle = parsed_subtitles;
       }
     });
-    // console.log("subtitle", subtitle);
     return subtitle;
   } else {
     console.log("No suitable subtitles found.");
@@ -155,8 +152,6 @@ export const fetchTranscript = async (url) => {
 export const getSummery = async (url) => {
   "use server";
   const transcript = await fetchTranscript(url);
-  // const transcript = await YoutubeTranscript.fetchTranscript(url);
-  // console.log("transcipt", transcript);
   const summary = await generateSummary(transcript);
 
   return summary;
