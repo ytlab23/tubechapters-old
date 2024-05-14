@@ -26,9 +26,9 @@ export const get_data = async (url) => {
 export const generateSummary = async (subtitles) => {
   "use server";
   // Convert the subtitles to a string
-  // const openai = new OpenAI({
-  //   apiKey: process.env.API_KEY,
-  // });
+  const openai = new OpenAI({
+    apiKey: process.env.API_KEY,
+  });
   console.log(subtitles);
   try {
     let subtitlesString = subtitles
@@ -66,30 +66,30 @@ After creating the chapters, provide a short summarized description of the video
 `;
 
     // Send the subtitles to OpenAIs
-    // const result = await openai.chat.completions.create({
-    //   messages: [
-    //     {
-    //       role: "system",
-    //       content: simplePrompt,
-    //     },
-    //   ],
-    //   max_tokens: 500,
-    //   model: "gpt-4-turbo",
-    // });
+    const result = await openai.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: simplePrompt,
+        },
+      ],
+      max_tokens: 500,
+      model: "gpt-4-turbo",
+    });
 
-    // let gptResponse = result.choices[0].message.content;
+    let gptResponse = result.choices[0].message.content;
 
-    // let startOfHeading = gptResponse.indexOf("0:00");
+    let startOfHeading = gptResponse.indexOf("0:00");
 
-    // if (startOfHeading) {
-    //   gptResponse = gptResponse.slice(startOfHeading).split("\n");
-    // } else {
-    //   gptResponse = gptResponse.split("\n");
-    // }
+    if (startOfHeading) {
+      gptResponse = gptResponse.slice(startOfHeading).split("\n");
+    } else {
+      gptResponse = gptResponse.split("\n");
+    }
 
     // console.log(gptResponse);
 
-    return subtitlesString;
+    return gptResponse;
   } catch (error) {
     console.log("not subtitles was found");
   }
