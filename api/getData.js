@@ -21,9 +21,11 @@ export const get_data = async (url) => {
         },
       },
     });
-    return response.text();
+    const data = await response.text();
+    console.log("response ---->", data);
+    return data;
   } catch (error) {
-    console.error("error --->", error);
+    console.error("get data error --->", error);
   }
 };
 
@@ -78,7 +80,7 @@ export const fetchTranscript = async (url) => {
       return "No suitable subtitles found.";
     }
   } catch (error) {
-    console.error("error --->", error);
+    console.error("no caption error --->", error);
   }
 };
 
