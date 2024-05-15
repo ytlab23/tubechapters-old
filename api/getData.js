@@ -24,7 +24,10 @@ export const get_data = async (url) => {
   "use server";
 
   try {
-    const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
+    // const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
+    const userAgent =
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+    console.log(userAgent);
     await delay(3000);
     const response = await fetch(url, {
       headers: {
@@ -57,16 +60,18 @@ export const generateSummary = async (subtitles) => {
   try {
     let subtitlesString = subtitles
       .map((subtitle) => {
-        const minutes = Math.floor(Number(subtitle.offset) / 60);
-        const remainingSeconds = Math.round(Number(subtitle.offset) % 60);
+        const minutes = Math.floor(Number(subtitle.time) / 60);
+        const remainingSeconds = Math.round(Number(subtitle.time) % 60);
         const time = `${minutes}:${
           remainingSeconds < 10 ? "0" : ""
         }${remainingSeconds}`;
-        return `${time} ${subtitle.text}`;
+        return `${time} ${subtitle.lines}`;
       })
       .join("\n");
 
     subtitlesString = subtitlesString.replace(/&#39;/g, "'");
+
+    console.log("formmated subtitles in gpt---->", subtitles);
 
     const complexPrompt = `
   Given the following video transcript:
@@ -142,11 +147,11 @@ export const fetchTranscript = async (url) => {
         const end = script.innerHTML.indexOf("]", start);
         console.log("srat--->", start);
         console.log("end--->", end);
-        console.log("script of arrays--->", script.innerHTML);
+
         const jsonString = script.innerHTML
           .slice(start, end + 1)
           .replace('captionTracks":', "");
-
+        console.log("script of arrays--->", script.innerHTML);
         captions = JSON.parse(jsonString);
         console.log("jsonString--->", captions);
         break;
@@ -187,6 +192,7 @@ export const fetchTranscript = async (url) => {
     }
   } catch (error) {
     console.error("no caption error --->", error);
+    return "caption parse error";
   }
 };
 

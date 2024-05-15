@@ -34,6 +34,7 @@ const Form = ({ getSummery }) => {
             setData([]);
             setLoading(true);
             let data = await getSummery(url);
+            console.log("front data", data);
             if (data !== typeof String) {
               setLoading(false);
               setError(false);
@@ -53,7 +54,7 @@ const Form = ({ getSummery }) => {
         {loading ? <span className="loader"></span> : "Generate"}
       </button>
       {error && <p className="text-sm text-red-600 text-left">{errorText}</p>}
-      {data.length > 0 && (
+      {data?.length > 0 && (
         <div className="flex flex-col gap-y-4 my-4 bg-back md:p-8 px-4 py-8 rounded-lg">
           <ResultContainer>
             <div className="flex flex-col gap-y-2 text-left">
