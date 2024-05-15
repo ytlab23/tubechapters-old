@@ -6,7 +6,7 @@ import ResultContainer from "./ResultContainer";
 // import { YoutubeTranscript } from "youtube-transcript";
 // import { getTranscript } from "@/api/getData";
 
-const Form = ({ getSummery, getTranscript }) => {
+const Form = ({ getSummery }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
@@ -15,6 +15,11 @@ const Form = ({ getSummery, getTranscript }) => {
   const [desc, setDesc] = useState("");
   const [showDesc, setShowDesc] = useState(false);
   const [error, setError] = useState(false);
+
+  const getTranscript = async () => {
+    const transcript = await YoutubeTranscript.fetchTranscript("jTRfhbWRuro");
+    console.log(transcript);
+  };
 
   return (
     <div className="flex flex-col gap-y-4 mt-24">

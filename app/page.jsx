@@ -8,7 +8,7 @@ export default function Home() {
       <h2 className="text-xl text-primary">
         Create captions and timestamps for youtube vide
       </h2>
-      <Form getSummery={getSummery} getTranscript={getTranscript} />
+      <Form getSummery={getSummery} />
     </div>
   );
 }
