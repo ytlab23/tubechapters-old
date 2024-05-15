@@ -25,28 +25,26 @@ const Form = ({ getSummery }) => {
       <button
         className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
         onClick={async () => {
-          const summery = await getSummery(url);
-          console.log("summery", summery);
-          // if (url !== "") {
-          //   setCopyText("Copy");
-          //   setDescText("Copy");
-          //   setShowDesc(false);
-          //   setData([]);
-          //   setLoading(true);
-          //   let data = await getSummery(url);
-          //   if (data) {
-          //     setLoading(false);
-          //     setError(false);
-          //     const last = data?.length;
-          //     let description = data?.slice(last - 2, last + 1);
-          //     setDesc(description?.join("\n"));
-          //     data = data?.slice(0, last - 2);
-          //     setData(data);
-          //   } else {
-          //     setLoading(false);
-          //     setError(true);
-          //   }
-          // }
+          if (url !== "") {
+            setCopyText("Copy");
+            setDescText("Copy");
+            setShowDesc(false);
+            setData([]);
+            setLoading(true);
+            let data = await getSummery(url);
+            if (data) {
+              setLoading(false);
+              setError(false);
+              const last = data?.length;
+              let description = data?.slice(last - 2, last + 1);
+              setDesc(description?.join("\n"));
+              data = data?.slice(0, last - 2);
+              setData(data);
+            } else {
+              setLoading(false);
+              setError(true);
+            }
+          }
         }}
       >
         {loading ? <span className="loader"></span> : "Generate"}
