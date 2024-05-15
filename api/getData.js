@@ -33,6 +33,7 @@ export const fetchTranscript = async (url) => {
     const html = await get_data(url);
     const dom = new JSDOM(html);
     const scripts = dom.window.document.querySelectorAll("script");
+    console.log("scripts--->", scripts);
     let captions = [];
 
     for (let script of scripts) {
@@ -51,6 +52,7 @@ export const fetchTranscript = async (url) => {
       const selected_caption = captions[0];
       console.log("selected_caption", selected_caption);
       const subtitles_data = await get_data(selected_caption.baseUrl);
+      console.log("subtitles_data--->", subtitles_data);
       let subtitle = "";
       xml2js.parseString(subtitles_data, async (err, result) => {
         if (err) {
