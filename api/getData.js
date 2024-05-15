@@ -7,26 +7,10 @@ import OpenAI from "openai";
 import puppeteer from "puppeteer";
 
 // List of user-agents
-const platforms = [
-  "Macintosh; Intel Mac OS X 10_15_7",
-  "Windows NT 10.0; Win64; x64",
-  "Linux x86_64",
-];
-
-const browsers = [
-  "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-  "Gecko/20100101 Firefox/89.0",
-  "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Safari/605.1.15",
-];
 
 export const get_data = async (url) => {
   "use server";
   try {
-    const randomPlatform =
-      platforms[Math.floor(Math.random() * platforms.length)];
-    const randomBrowser = browsers[Math.floor(Math.random() * browsers.length)];
-
-    const userAgent = `Mozilla/5.0 (${randomPlatform}) ${randomBrowser}`;
     const response = await fetch(url, {
       proxy: {
         host: process.env.PACKET_IP,
@@ -35,9 +19,6 @@ export const get_data = async (url) => {
           username: process.env.PACKET_USERNAME, // replace with your Packet Stream username
           password: process.env.PACKET_PASSWORD, // replace with your Packet Stream password
         },
-      },
-      headers: {
-        "User-Agent": userAgent,
       },
     });
     return response.text();
@@ -48,50 +29,53 @@ export const get_data = async (url) => {
 
 export const fetchTranscript = async (url) => {
   "use server";
-  const html = await get_data(url);
-  const dom = new JSDOM(html);
-  const scripts = dom.window.document.querySelectorAll("script");
-  let captions = [];
+  try {
+    const html = await get_data(url);
+    const dom = new JSDOM(html);
+    const scripts = dom.window.document.querySelectorAll("script");
+    let captions = [];
 
-  for (let script of scripts) {
-    if (script.innerHTML.includes("captionTracks")) {
-      const start = script.innerHTML.indexOf("captionTracks");
-
-      const end = script.innerHTML.indexOf("]", start);
-      const jsonString = script.innerHTML
-        .slice(start, end + 1)
-        .replace('captionTracks":', "");
-      captions = JSON.parse(jsonString);
-      break;
-    }
-  }
-
-  if (captions.length > 0) {
-    const selected_caption = captions[0];
-    console.log("selected_caption", selected_caption);
-    const subtitles_data = await get_data(selected_caption.baseUrl);
-    let subtitle = "";
-    xml2js.parseString(subtitles_data, async (err, result) => {
-      if (err) {
-        res.send("Error parsing XML.");
-      } else {
-        const parsed_subtitles = result.transcript.text.map((item) => {
-          const minutes = Math.floor(Number(item.$.start) / 60);
-          const remainingSeconds = Math.round(Number(item.$.start) % 60);
-          const time = `${minutes}:${
-            remainingSeconds < 10 ? "0" : ""
-          }${remainingSeconds}`;
-          const lines = item._;
-          const arr = { time, lines };
-          return arr;
-        });
-        subtitle = parsed_subtitles;
+    for (let script of scripts) {
+      if (script.innerHTML.includes("captionTracks")) {
+        const start = script.innerHTML.indexOf("captionTracks");
+        const end = script.innerHTML.indexOf("]", start);
+        const jsonString = script.innerHTML
+          .slice(start, end + 1)
+          .replace('captionTracks":', "");
+        captions = JSON.parse(jsonString);
+        break;
       }
-    });
-    return subtitle;
-  } else {
-    console.log("No suitable subtitles found.");
-    return "No suitable subtitles found.";
+    }
+
+    if (captions.length > 0) {
+      const selected_caption = captions[0];
+      console.log("selected_caption", selected_caption);
+      const subtitles_data = await get_data(selected_caption.baseUrl);
+      let subtitle = "";
+      xml2js.parseString(subtitles_data, async (err, result) => {
+        if (err) {
+          res.send("Error parsing XML.");
+        } else {
+          const parsed_subtitles = result.transcript.text.map((item) => {
+            const minutes = Math.floor(Number(item.$.start) / 60);
+            const remainingSeconds = Math.round(Number(item.$.start) % 60);
+            const time = `${minutes}:${
+              remainingSeconds < 10 ? "0" : ""
+            }${remainingSeconds}`;
+            const lines = item._;
+            const arr = { time, lines };
+            return arr;
+          });
+          subtitle = parsed_subtitles;
+        }
+      });
+      return subtitle;
+    } else {
+      console.log(error);
+      return "No suitable subtitles found.";
+    }
+  } catch (error) {
+    console.error("error --->", error);
   }
 };
 
