@@ -71,7 +71,6 @@ export const fetchTranscript = async (url) => {
       });
       return subtitle;
     } else {
-      console.log(error);
       return "No suitable subtitles found.";
     }
   } catch (error) {
