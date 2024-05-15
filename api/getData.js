@@ -117,7 +117,7 @@ After creating the chapters, provide a short summarized description of the video
       gptResponse = gptResponse.split("\n");
     }
 
-    console.log(gptResponse);
+    console.log("gptResponse-->", gptResponse);
 
     return gptResponse;
   } catch (error) {
