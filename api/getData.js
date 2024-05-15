@@ -4,8 +4,6 @@ const { JSDOM } = jsdom;
 import xml2js from "xml2js";
 import OpenAI from "openai";
 
-import { YoutubeTranscript } from "youtube-transcript";
-
 const platforms = [
   "Macintosh; Intel Mac OS X 10_15_7",
   "Windows NT 10.0; Win64; x64",
@@ -25,7 +23,7 @@ export const get_data = async (url) => {
       platforms[Math.floor(Math.random() * platforms.length)];
     const randomBrowser = browsers[Math.floor(Math.random() * browsers.length)];
     const userAgent = `Mozilla/5.0 (${randomPlatform}) ${randomBrowser}`;
-
+    // const userAgent = "Mozilla/5.0 (Linux x86_64) Gecko/20100101 Firefox/89.0";
     console.log("userAgent", userAgent);
     const response = await axios.get(url, {
       headers: {
@@ -140,6 +138,7 @@ export const fetchTranscript = async (url) => {
 
   if (captions.length > 0) {
     const selected_caption = captions[0];
+    console.log("selected_caption", selected_caption);
     const subtitles_data = await get_data(selected_caption.baseUrl);
     let subtitle = "";
     xml2js.parseString(subtitles_data, async (err, result) => {
@@ -169,13 +168,7 @@ export const fetchTranscript = async (url) => {
 export const getSummery = async (url) => {
   "use server";
   const transcript = await fetchTranscript(url);
-  const summary = await generateSummary(transcript);
-
-  return summary;
-};
-
-export const getTranscript = async () => {
-  "use server";
-  const transcript = await YoutubeTranscript.fetchTranscript("jTRfhbWRuro");
-  console.log(transcript);
+  // const summary = await generateSummary(transcript);
+  console.log("trascript", transcript);
+  return transcript;
 };

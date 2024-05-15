@@ -16,11 +16,6 @@ const Form = ({ getSummery }) => {
   const [showDesc, setShowDesc] = useState(false);
   const [error, setError] = useState(false);
 
-  const getTranscript = async () => {
-    const transcript = await YoutubeTranscript.fetchTranscript("jTRfhbWRuro");
-    console.log(transcript);
-  };
-
   return (
     <div className="flex flex-col gap-y-4 mt-24">
       <h2 className="text-base text-primary">Add your YouTube URL 👇</h2>
@@ -33,7 +28,7 @@ const Form = ({ getSummery }) => {
       <button
         className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
         onClick={() => {
-          getTranscript();
+          getSummery("https://www.youtube.com/watch?v=jTRfhbWRuro");
           // if (url !== "") {
           //   setCopyText("Copy");
           //   setDescText("Copy");
