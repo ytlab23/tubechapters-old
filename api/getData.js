@@ -52,11 +52,13 @@ export const fetchTranscript = async (url) => {
       const selected_caption = captions[0];
       console.log("selected_caption", selected_caption);
       const subtitles_data = await get_data(selected_caption.baseUrl);
+
       console.log("subtitles_data--->", subtitles_data);
       let subtitle = "";
       xml2js.parseString(subtitles_data, async (err, result) => {
         if (err) {
-          res.send("Error parsing XML.");
+          console.log("parse error --->", err);
+          return "Error parsing XML.";
         } else {
           const parsed_subtitles = result.transcript.text.map((item) => {
             const minutes = Math.floor(Number(item.$.start) / 60);
