@@ -2,9 +2,6 @@
 import { useState } from "react";
 import CopyHandler from "./CopyHandler";
 import ResultContainer from "./ResultContainer";
-// import axios from "axios";
-import { YoutubeTranscript } from "youtube-transcript";
-// import { getTranscript } from "@/api/getData";
 
 const Form = ({ getSummery }) => {
   const [data, setData] = useState([]);
@@ -28,9 +25,7 @@ const Form = ({ getSummery }) => {
       <button
         className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
         onClick={async () => {
-          const summery = await getSummery(
-            "https://www.youtube.com/watch?v=jTRfhbWRuro"
-          );
+          const summery = await getSummery(url);
           console.log("summery", summery);
           // if (url !== "") {
           //   setCopyText("Copy");

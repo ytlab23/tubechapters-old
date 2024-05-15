@@ -17,9 +17,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.2.1",
-    "react-loader-spinner": "^6.1.6",
-    "xml2js": "^0.6.2",
-    "youtube-transcript": "^1.2.1"
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "eslint": "^8",
