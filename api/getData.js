@@ -176,8 +176,6 @@ export const getSummery = async (url) => {
 
 export const getTranscript = async () => {
   "use server";
-  const transcript = await YoutubeTranscript.fetchTranscript(
-    "https://www.youtube.com/watch?v=jTRfhbWRuro&t=524s"
-  );
+  const transcript = await YoutubeTranscript.fetchTranscript("jTRfhbWRuro");
   console.log(transcript);
 };
