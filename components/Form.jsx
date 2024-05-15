@@ -27,8 +27,11 @@ const Form = ({ getSummery }) => {
       />
       <button
         className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
-        onClick={() => {
-          getSummery("https://www.youtube.com/watch?v=jTRfhbWRuro");
+        onClick={async () => {
+          const summery = await getSummery(
+            "https://www.youtube.com/watch?v=jTRfhbWRuro"
+          );
+          console.log("summery", summery);
           // if (url !== "") {
           //   setCopyText("Copy");
           //   setDescText("Copy");
