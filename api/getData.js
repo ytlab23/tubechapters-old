@@ -142,7 +142,7 @@ export const fetchTranscript = async (url) => {
         const end = script.innerHTML.indexOf("]", start);
         console.log("srat--->", start);
         console.log("end--->", end);
-        // console.log("script--->", script.innerHTML);
+        console.log("script of arrays--->", script.innerHTML);
         const jsonString = script.innerHTML
           .slice(start, end + 1)
           .replace('captionTracks":', "");
