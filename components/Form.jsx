@@ -3,7 +3,7 @@ import { useState } from "react";
 import CopyHandler from "./CopyHandler";
 import ResultContainer from "./ResultContainer";
 // import axios from "axios";
-// import { YoutubeTranscript } from "youtube-transcript";
+import { YoutubeTranscript } from "youtube-transcript";
 // import { getTranscript } from "@/api/getData";
 
 const Form = ({ getSummery }) => {
