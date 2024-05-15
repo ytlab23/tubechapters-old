@@ -179,7 +179,10 @@ export const fetchTranscript = async (url) => {
       });
       return subtitle;
     } else {
-      return "No suitable subtitles found.";
+      console.log(
+        "This page appears when Google automatically detects requests coming from your computer network which appear to be in violation of the"
+      );
+      return "Blocked by google";
     }
   } catch (error) {
     console.error("no caption error --->", error);

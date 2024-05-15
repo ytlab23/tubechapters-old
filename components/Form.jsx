@@ -9,6 +9,7 @@ const Form = ({ getSummery }) => {
   const [url, setUrl] = useState("");
   const [copyText, setCopyText] = useState("Copy");
   const [descText, setDescText] = useState("Copy");
+  const [errorText, setErrorText] = useState("");
   const [desc, setDesc] = useState("");
   const [showDesc, setShowDesc] = useState(false);
   const [error, setError] = useState(false);
@@ -26,13 +27,14 @@ const Form = ({ getSummery }) => {
         className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
         onClick={async () => {
           if (url !== "") {
+            setError(false);
             setCopyText("Copy");
             setDescText("Copy");
             setShowDesc(false);
             setData([]);
             setLoading(true);
             let data = await getSummery(url);
-            if (data) {
+            if (data !== typeof String) {
               setLoading(false);
               setError(false);
               const last = data?.length;
@@ -43,13 +45,14 @@ const Form = ({ getSummery }) => {
             } else {
               setLoading(false);
               setError(true);
+              setErrorText(data);
             }
           }
         }}
       >
         {loading ? <span className="loader"></span> : "Generate"}
       </button>
-      {error && <p className="text-sm text-red-600 text-left">Error accured</p>}
+      {error && <p className="text-sm text-red-600 text-left">{errorText}</p>}
       {data.length > 0 && (
         <div className="flex flex-col gap-y-4 my-4 bg-back md:p-8 px-4 py-8 rounded-lg">
           <ResultContainer>
