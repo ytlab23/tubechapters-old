@@ -1,4 +1,4 @@
-import { getSummery } from "@/api/getData";
+import { getSummery, getTranscript } from "@/api/getData";
 import Form from "@/components/Form";
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
       <h2 className="text-xl text-primary">
         Create captions and timestamps for youtube vide
       </h2>
-      <Form getSummery={getSummery} />
+      <Form getSummery={getSummery} getTranscript={getTranscript} />
     </div>
   );
 }

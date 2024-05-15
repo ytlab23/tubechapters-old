@@ -2,8 +2,11 @@
 import { useState } from "react";
 import CopyHandler from "./CopyHandler";
 import ResultContainer from "./ResultContainer";
+// import axios from "axios";
+// import { YoutubeTranscript } from "youtube-transcript";
+// import { getTranscript } from "@/api/getData";
 
-const Form = ({ getSummery }) => {
+const Form = ({ getSummery, getTranscript }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
@@ -24,27 +27,28 @@ const Form = ({ getSummery }) => {
       />
       <button
         className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
-        onClick={async () => {
-          if (url !== "") {
-            setCopyText("Copy");
-            setDescText("Copy");
-            setShowDesc(false);
-            setData([]);
-            setLoading(true);
-            let data = await getSummery(url);
-            if (data) {
-              setLoading(false);
-              setError(false);
-              const last = data?.length;
-              let description = data?.slice(last - 2, last + 1);
-              setDesc(description?.join("\n"));
-              data = data?.slice(0, last - 2);
-              setData(data);
-            } else {
-              setLoading(false);
-              setError(true);
-            }
-          }
+        onClick={() => {
+          getTranscript();
+          // if (url !== "") {
+          //   setCopyText("Copy");
+          //   setDescText("Copy");
+          //   setShowDesc(false);
+          //   setData([]);
+          //   setLoading(true);
+          //   let data = await getSummery(url);
+          //   if (data) {
+          //     setLoading(false);
+          //     setError(false);
+          //     const last = data?.length;
+          //     let description = data?.slice(last - 2, last + 1);
+          //     setDesc(description?.join("\n"));
+          //     data = data?.slice(0, last - 2);
+          //     setData(data);
+          //   } else {
+          //     setLoading(false);
+          //     setError(true);
+          //   }
+          // }
         }}
       >
         {loading ? <span className="loader"></span> : "Generate"}
