@@ -53,6 +53,7 @@ export const generateSummary = async (subtitles) => {
   const openai = new OpenAI({
     apiKey: process.env.API_KEY,
   });
+  console.log("subtitles in gpt---->", subtitles);
   try {
     let subtitlesString = subtitles
       .map((subtitle) => {
