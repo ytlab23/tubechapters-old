@@ -91,7 +91,7 @@ export const fetchTranscript = async (url) => {
     password: process.env.PACKET_PASSWORD, // replace with your Packet Stream password
   });
   // await page.setUserAgent("Your User Agent String"); // replace with your desired user agent string
-  // page.setDefaultNavigationTimeout(2 * 60 * 1000); // Set navigation timeout as needed
+  page.setDefaultNavigationTimeout(1 * 60 * 1000); // Set navigation timeout as needed
   await page.goto(url);
   await page.waitForSelector("script"); // Wait for script tags to load
 
