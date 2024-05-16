@@ -8,10 +8,7 @@ const Nav = () => {
         tubechapters
       </Link>
       <div className="flex gap-x-8 items-center">
-        <Link href="/" className="text-primary text-base font-normal">
-          Help
-        </Link>
-        <Link href="/" className="text-primary text-base font-normal">
+        <Link href="#about" className="text-primary text-base font-normal">
           About
         </Link>
       </div>

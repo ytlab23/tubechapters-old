@@ -4,30 +4,19 @@ const { JSDOM } = jsdom;
 import xml2js from "xml2js";
 import OpenAI from "openai";
 
-// List of user-agents
-const userAgents = [
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0",
-  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-  "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Mobile/15E148 Safari/604.1",
-  "Mozilla/5.0 (iPad; CPU OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Mobile/15E148 Safari/604.1",
-  "Mozilla/5.0 (iPod touch; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Mobile/15E148 Safari/604.1",
-  "Mozilla/5.0 (Linux; Android 10; SM-G960U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.181 Mobile Safari/537.36",
-  "Mozilla/5.0 (Linux; Android 10; SM-A205U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.181 Mobile Safari/537.36",
-  "Mozilla/5.0 (Linux; Android 10; LM-Q720) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.181 Mobile Safari/537.36",
-];
-
+// request time delyer function
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
+//url fetcher
 export const get_data = async (url) => {
   "use server";
-
   try {
-    // const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
+    // updated manual userAgent
     const userAgent =
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
     console.log(userAgent);
+
+    // making a delay before a request
     await delay(3000);
     const response = await fetch(url, {
       headers: {
@@ -37,8 +26,8 @@ export const get_data = async (url) => {
         host: process.env.PACKET_IP,
         port: process.env.PACKET_PORT,
         auth: {
-          username: process.env.PACKET_USERNAME, // replace with your Packet Stream username
-          password: process.env.PACKET_PASSWORD, // replace with your Packet Stream password
+          username: process.env.PACKET_USERNAME,
+          password: process.env.PACKET_PASSWORD,
         },
       },
     });
@@ -47,9 +36,13 @@ export const get_data = async (url) => {
     return data;
   } catch (error) {
     console.error("get data error --->", error);
+    throw new Error(
+      `${error.message}: \n Please provide valid url https://www.youtube.com/....`
+    );
   }
 };
 
+// gpt summery generater
 export const generateSummary = async (subtitles) => {
   "use server";
   // Convert the subtitles to a string
@@ -57,21 +50,17 @@ export const generateSummary = async (subtitles) => {
     apiKey: process.env.API_KEY,
   });
   console.log("subtitles in gpt---->", subtitles);
+
   try {
     let subtitlesString = subtitles
       .map((subtitle) => {
-        const minutes = Math.floor(Number(subtitle.time) / 60);
-        const remainingSeconds = Math.round(Number(subtitle.time) % 60);
-        const time = `${minutes}:${
-          remainingSeconds < 10 ? "0" : ""
-        }${remainingSeconds}`;
-        return `${time} ${subtitle.lines}`;
+        return `${subtitle?.time} ${subtitle?.lines}`;
       })
       .join("\n");
 
     subtitlesString = subtitlesString.replace(/&#39;/g, "'");
 
-    console.log("formmated subtitles in gpt---->", subtitles);
+    console.log("formmated subtitles in gpt---->", subtitlesString);
 
     const complexPrompt = `
   Given the following video transcript:
@@ -128,25 +117,37 @@ After creating the chapters, provide a short summarized description of the video
     return gptResponse;
   } catch (error) {
     console.log("not subtitles was found");
+    throw new Error(`${error.message}`);
   }
 };
 
+// transcript fetcher from youtube
 export const fetchTranscript = async (url) => {
   "use server";
   try {
+    const isValidYouTubeUrl = (url) => {
+      const pattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+      return pattern.test(url);
+    };
+    const urlValidator = isValidYouTubeUrl(url);
+    console.log("urlValidator", urlValidator);
+
+    if (!urlValidator) {
+      throw new Error(
+        `Invalid Url.\n Please provide valid url https://www.youtube.com/....`
+      );
+    }
+
     const html = await get_data(url);
     const dom = new JSDOM(html);
-    // console.log("doooom--->", dom);
     const scripts = dom.window.document.querySelectorAll("script");
-    // console.log("scripts--->", scripts);
+
     let captions = [];
 
     for (let script of scripts) {
       if (script.innerHTML.includes("captionTracks")) {
         const start = script.innerHTML.indexOf("captionTracks");
         const end = script.innerHTML.indexOf("]", start);
-        console.log("srat--->", start);
-        console.log("end--->", end);
 
         const jsonString = script.innerHTML
           .slice(start, end + 1)
@@ -161,13 +162,13 @@ export const fetchTranscript = async (url) => {
     if (captions.length > 0) {
       const selected_caption = captions[0];
       console.log("base url", selected_caption.baseUrl);
+
       const subtitles_data = await get_data(selected_caption.baseUrl);
 
-      // console.log("subtitles_data--->", subtitles_data);
       let subtitle = "";
       xml2js.parseString(subtitles_data, async (err, result) => {
         if (err) {
-          // console.log("parse error --->", err);
+          console.log("xml2js parse error --->", err);
           return "Error parsing XML.";
         } else {
           const parsed_subtitles = result.transcript.text.map((item) => {
@@ -177,29 +178,34 @@ export const fetchTranscript = async (url) => {
               remainingSeconds < 10 ? "0" : ""
             }${remainingSeconds}`;
             const lines = item._;
-            const arr = { time, lines };
-            return arr;
+
+            return { time, lines };
           });
+
           subtitle = parsed_subtitles;
         }
       });
       return subtitle;
     } else {
-      console.log(
-        "This page appears when Google automatically detects requests coming from your computer network which appear to be in violation of the"
-      );
-      return "Blocked by google";
+      console.log("No captions avaliable for this page");
+      throw new Error("No captions Found");
     }
   } catch (error) {
-    console.error("no caption error --->", error);
-    return "caption parse error";
+    console.error("Invalid link or error while fetching", error.message);
+    throw new Error(`${error.message}`);
+    // return "caption parse error";
   }
 };
 
+// summery geter
 export const getSummery = async (url) => {
   "use server";
-  const transcript = await fetchTranscript(url);
-  const summary = await generateSummary(transcript);
-  // console.log("trascript", transcript);
-  return summary;
+  try {
+    const transcript = await fetchTranscript(url);
+    const summary = await generateSummary(transcript);
+    return summary;
+  } catch (error) {
+    console.log("getSummery error -->", error.message);
+    return error.message;
+  }
 };

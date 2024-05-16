@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
 .box {
   box-shadow: 0px 24px 39px 3px rgba(0, 0, 0, 0.1);
 }

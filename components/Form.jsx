@@ -33,9 +33,9 @@ const Form = ({ getSummery }) => {
             setShowDesc(false);
             setData([]);
             setLoading(true);
-            let data = await getSummery(url);
+            let data = await getSummery(url.trim());
             console.log("front data", data);
-            if (data !== typeof String) {
+            if (typeof data !== "string") {
               setLoading(false);
               setError(false);
               const last = data?.length;
@@ -48,6 +48,9 @@ const Form = ({ getSummery }) => {
               setError(true);
               setErrorText(data);
             }
+          } else {
+            setError(true);
+            setErrorText("Please provide a link");
           }
         }}
       >
