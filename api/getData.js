@@ -32,7 +32,7 @@ export const get_data = async (url) => {
       },
     });
     const data = await response.text();
-    // console.log("response ---->", data);
+    console.log("get data response ---->", data);
     return data;
   } catch (error) {
     console.error("get data error --->", error);
