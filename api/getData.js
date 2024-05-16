@@ -14,7 +14,7 @@ export const get_data = async (url) => {
     // updated manual userAgent
     const userAgent =
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
-    console.log(userAgent);
+    // console.log(userAgent);
 
     // making a delay before a request
     await delay(3000);
@@ -49,7 +49,7 @@ export const generateSummary = async (subtitles, chapterType) => {
   const openai = new OpenAI({
     apiKey: process.env.API_KEY,
   });
-  console.log("subtitles in gpt---->", subtitles);
+  // console.log("subtitles in gpt---->", subtitles);
 
   try {
     let subtitlesString = subtitles
@@ -60,7 +60,7 @@ export const generateSummary = async (subtitles, chapterType) => {
 
     subtitlesString = subtitlesString.replace(/&#39;/g, "'");
 
-    console.log("formmated subtitles in gpt---->", subtitlesString);
+    // console.log("formmated subtitles in gpt---->", subtitlesString);
 
     const complexPrompt = `
   Given the following video transcript:
@@ -91,6 +91,7 @@ After creating the chapters, provide a short summarized description of the video
 `;
 
     const prompt = chapterType === "simple" ? simplePrompt : complexPrompt;
+    const maxTockens = chapterType === "simple" ? 400 : 600;
 
     // Send the subtitles to OpenAIs
     const result = await openai.chat.completions.create({
@@ -100,7 +101,7 @@ After creating the chapters, provide a short summarized description of the video
           content: prompt,
         },
       ],
-      max_tokens: 500,
+      max_tokens: maxTockens,
       model: "gpt-4-turbo",
     });
 
@@ -114,7 +115,7 @@ After creating the chapters, provide a short summarized description of the video
       gptResponse = gptResponse.split("\n");
     }
 
-    console.log("gptResponse-->", gptResponse);
+    // console.log("gptResponse-->", gptResponse);
 
     return gptResponse;
   } catch (error) {
@@ -132,7 +133,7 @@ export const fetchTranscript = async (url) => {
       return pattern.test(url);
     };
     const urlValidator = isValidYouTubeUrl(url);
-    console.log("urlValidator", urlValidator);
+    // console.log("urlValidator", urlValidator);
 
     if (!urlValidator) {
       throw new Error(
@@ -154,16 +155,16 @@ export const fetchTranscript = async (url) => {
         const jsonString = script.innerHTML
           .slice(start, end + 1)
           .replace('captionTracks":', "");
-        console.log("script of arrays--->", script.innerHTML);
+        // console.log("script of arrays--->", script.innerHTML);
         captions = JSON.parse(jsonString);
-        console.log("jsonString--->", captions);
+        // console.log("jsonString--->", captions);
         break;
       }
     }
 
     if (captions.length > 0) {
       const selected_caption = captions[0];
-      console.log("base url", selected_caption.baseUrl);
+      // console.log("base url", selected_caption.baseUrl);
 
       const subtitles_data = await get_data(selected_caption.baseUrl);
 
