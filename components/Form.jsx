@@ -46,7 +46,7 @@ const Form = ({ getSummery }) => {
               setData([]);
               setLoading(true);
               let data = await getSummery(url.trim(), chapterType);
-              console.log("front data", data);
+              // console.log("front data", data);
               if (typeof data !== "string") {
                 setLoading(false);
                 setError(false);
