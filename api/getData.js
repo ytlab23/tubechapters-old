@@ -91,7 +91,7 @@ export const generateSummary = async (subtitles) => {
 ${subtitlesString}
 
 Your task is to convert it into YouTube-like chapters divided into timestamps. 
-The transcript includes timestamps formatted as seconds (e.g., 960.959) indicating 
+The transcript includes timestamps indicating 
 the start of each section. Ensure that the timestamps 
 accurately reflect the content discussed in the transcript. 
 Your goal is to facilitate easier navigation and reference within the video for 
