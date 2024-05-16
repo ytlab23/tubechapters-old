@@ -1,8 +1,10 @@
-import axios from "axios";
 import jsdom from "jsdom";
 const { JSDOM } = jsdom;
 import xml2js from "xml2js";
 import OpenAI from "openai";
+import puppeteer from "puppeteer";
+import { HttpsProxyAgent } from "https-proxy-agent";
+import axios from "axios";
 
 // list of userAgents
 const userAgents = [
@@ -21,35 +23,34 @@ const userAgents = [
 // request time delyer function
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-//url fetcher
-export const get_data = async (url) => {
+export const get_data_axios = async (url) => {
   "use server";
   try {
     // dynamic userAgent
     const randomUserAgent =
       userAgents[Math.floor(Math.random() * userAgents.length)];
 
-    // manual userAgent
-    // const userAgent =
-    //   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
-    // console.log(userAgent);
-
     // making a delay before a request
     await delay(3000);
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent": randomUserAgent,
-      },
-      proxy: {
-        host: process.env.PACKET_IP,
-        port: process.env.PACKET_PORT,
-        auth: {
-          username: process.env.PACKET_USERNAME,
-          password: process.env.PACKET_PASSWORD,
-        },
-      },
+
+    const agent = new HttpsProxyAgent(
+      `http://${process.env.PACKET_USERNAME}:${process.env.PACKET_PASSWORD}@${process.env.PACKET_IP}:${process.env.PACKET_PORT}`
+    );
+
+    // const agent = new HttpsProxyAgent({
+    //   host: process.env.PACKET_IP,
+    //   port: process.env.PACKET_PORT,
+    //   auth: {
+    //     username: process.env.PACKET_USERNAME,
+    //     password: process.env.PACKET_PASSWORD,
+    //   },
+    // });
+
+    const response = await axios.get(url, {
+      httpsAgent: agent,
     });
-    const data = await response.text();
+
+    const data = response.data;
     console.log("get data response ---->", data);
     return data;
   } catch (error) {
@@ -59,6 +60,45 @@ export const get_data = async (url) => {
     );
   }
 };
+
+//url fetcher
+// export const get_data = async (url) => {
+//   "use server";
+//   try {
+//     // dynamic userAgent
+//     const randomUserAgent =
+//       userAgents[Math.floor(Math.random() * userAgents.length)];
+
+//     // manual userAgent
+//     // const userAgent =
+//     //   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+//     // console.log(userAgent);
+
+//     // making a delay before a request
+//     await delay(3000);
+//     const response = await fetch(url, {
+//       headers: {
+//         "User-Agent": randomUserAgent,
+//       },
+//       proxy: {
+//         host: process.env.PACKET_IP,
+//         port: process.env.PACKET_PORT,
+//         auth: {
+//           username: process.env.PACKET_USERNAME,
+//           password: process.env.PACKET_PASSWORD,
+//         },
+//       },
+//     });
+//     const data = await response.text();
+//     console.log("get data response ---->", data);
+//     return data;
+//   } catch (error) {
+//     console.error("get data error --->", error);
+//     throw new Error(
+//       `${error.message}: \n Please provide valid url https://www.youtube.com/....`
+//     );
+//   }
+// };
 
 // gpt summery generater
 export const generateSummary = async (subtitles, chapterType) => {
@@ -159,7 +199,7 @@ export const fetchTranscript = async (url) => {
       );
     }
 
-    const html = await get_data(url);
+    const html = await get_data_axios(url);
     const dom = new JSDOM(html);
     const scripts = dom.window.document.querySelectorAll("script");
 
@@ -184,7 +224,7 @@ export const fetchTranscript = async (url) => {
       const selected_caption = captions[0];
       // console.log("base url", selected_caption.baseUrl);
 
-      const subtitles_data = await get_data(selected_caption.baseUrl);
+      const subtitles_data = await get_data_axios(selected_caption.baseUrl);
 
       let subtitle = "";
       xml2js.parseString(subtitles_data, async (err, result) => {
@@ -218,7 +258,89 @@ export const fetchTranscript = async (url) => {
   }
 };
 
-// summery geter
+// export const fetchTranscript_puppeter = async (url) => {
+//   "use server";
+//   try {
+//     const isValidYouTubeUrl = (url) => {
+//       const pattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+//       return pattern.test(url);
+//     };
+//     const urlValidator = isValidYouTubeUrl(url);
+
+//     if (!urlValidator) {
+//       throw new Error(
+//         `Invalid Url.\n Please provide valid url https://www.youtube.com/....`
+//       );
+//     }
+
+//     const browser = await puppeteer.launch({
+//       args: [
+//         `--proxy-server=http://${process.env.PACKET_IP}:${process.env.PACKET_PORT}`,
+//       ],
+//     });
+
+//     const page = await browser.newPage();
+//     await page.authenticate({
+//       username: process.env.PACKET_USERNAME,
+//       password: process.env.PACKET_PASSWORD,
+//     });
+//     await page.goto(url);
+
+//     const captions = await page.evaluate(() => {
+//       let captions = [];
+//       for (let script of document.querySelectorAll("script")) {
+//         if (script.innerHTML.includes("captionTracks")) {
+//           const start = script.innerHTML.indexOf("captionTracks");
+//           const end = script.innerHTML.indexOf("]", start);
+//           const jsonString = script.innerHTML
+//             .slice(start, end + 1)
+//             .replace('captionTracks":', "");
+//           captions = JSON.parse(jsonString);
+//           break;
+//         }
+//       }
+//       return captions;
+//     });
+
+//     if (captions.length > 0) {
+//       const selected_caption = captions[0];
+
+//       await page.goto(selected_caption.baseUrl);
+
+//       const subtitles_data = await page.content();
+
+//       let subtitles = "";
+//       xml2js.parseString(subtitles_data, async (err, result) => {
+//         if (err) {
+//           console.log("xml2js parse error --->", err);
+//           return "Error parsing XML.";
+//         } else {
+//           const parsed_subtitles = result.transcript.text.map((item) => {
+//             const minutes = Math.floor(Number(item.$.start) / 60);
+//             const remainingSeconds = Math.round(Number(item.$.start) % 60);
+//             const time = `${minutes}:${
+//               remainingSeconds < 10 ? "0" : ""
+//             }${remainingSeconds}`;
+//             const lines = item._;
+
+//             return { time, lines };
+//           });
+
+//           subtitles = parsed_subtitles;
+//         }
+//       });
+//       await browser.close();
+//       return subtitles;
+//     } else {
+//       console.log("No captions avaliable for this page");
+//       throw new Error("No captions Found");
+//     }
+//   } catch (error) {
+//     console.error("Invalid link or error while fetching", error.message);
+//     throw new Error(`${error.message}`);
+//   }
+// };
+
 export const getSummery = async (url, chapterType) => {
   "use server";
   try {
