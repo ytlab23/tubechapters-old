@@ -4,6 +4,20 @@ const { JSDOM } = jsdom;
 import xml2js from "xml2js";
 import OpenAI from "openai";
 
+// list of userAgents
+const userAgents = [
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.3",
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:125.0) Gecko/20100101 Firefox/125.0",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.3",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 OPR/109.0.0.0",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.3",
+  "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.4",
+];
+
 // request time delyer function
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -11,16 +25,20 @@ const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 export const get_data = async (url) => {
   "use server";
   try {
-    // updated manual userAgent
-    const userAgent =
-      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+    // dynamic userAgent
+    const randomUserAgent =
+      userAgents[Math.floor(Math.random() * userAgents.length)];
+
+    // manual userAgent
+    // const userAgent =
+    //   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
     // console.log(userAgent);
 
     // making a delay before a request
     await delay(3000);
     const response = await fetch(url, {
       headers: {
-        "User-Agent": userAgent,
+        "User-Agent": randomUserAgent,
       },
       proxy: {
         host: process.env.PACKET_IP,
@@ -60,7 +78,7 @@ export const generateSummary = async (subtitles, chapterType) => {
 
     subtitlesString = subtitlesString.replace(/&#39;/g, "'");
 
-    // console.log("formmated subtitles in gpt---->", subtitlesString);
+    console.log("formmated subtitles in gpt---->", subtitlesString);
 
     const complexPrompt = `
   Given the following video transcript:
@@ -91,7 +109,7 @@ After creating the chapters, provide a short summarized description of the video
 `;
 
     const prompt = chapterType === "simple" ? simplePrompt : complexPrompt;
-    const maxTockens = chapterType === "simple" ? 400 : 600;
+    // const maxTockens = chapterType === "simple" ? 400 : 600;
 
     // Send the subtitles to OpenAIs
     const result = await openai.chat.completions.create({
@@ -101,7 +119,7 @@ After creating the chapters, provide a short summarized description of the video
           content: prompt,
         },
       ],
-      max_tokens: maxTockens,
+      max_tokens: 600,
       model: "gpt-4-turbo",
     });
 
@@ -115,7 +133,7 @@ After creating the chapters, provide a short summarized description of the video
       gptResponse = gptResponse.split("\n");
     }
 
-    // console.log("gptResponse-->", gptResponse);
+    console.log("gptResponse-->", gptResponse);
 
     return gptResponse;
   } catch (error) {
