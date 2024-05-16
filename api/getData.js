@@ -43,7 +43,7 @@ export const get_data = async (url) => {
 };
 
 // gpt summery generater
-export const generateSummary = async (subtitles) => {
+export const generateSummary = async (subtitles, chapterType) => {
   "use server";
   // Convert the subtitles to a string
   const openai = new OpenAI({
@@ -90,12 +90,14 @@ timestamp(in minutes) only.
 After creating the chapters, provide a short summarized description of the video based on the transcript in a new line.
 `;
 
+    const prompt = chapterType === "simple" ? simplePrompt : complexPrompt;
+
     // Send the subtitles to OpenAIs
     const result = await openai.chat.completions.create({
       messages: [
         {
           role: "system",
-          content: simplePrompt,
+          content: prompt,
         },
       ],
       max_tokens: 500,
@@ -198,11 +200,11 @@ export const fetchTranscript = async (url) => {
 };
 
 // summery geter
-export const getSummery = async (url) => {
+export const getSummery = async (url, chapterType) => {
   "use server";
   try {
     const transcript = await fetchTranscript(url);
-    const summary = await generateSummary(transcript);
+    const summary = await generateSummary(transcript, chapterType);
     return summary;
   } catch (error) {
     console.log("getSummery error -->", error.message);
