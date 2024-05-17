@@ -31,12 +31,12 @@ const Form = ({ getSummery }) => {
 
   const chapterTypeHandler = (option) => {
     setChapterType(option.value);
-    console.log(option.value);
+    // console.log(option.value);
   };
 
   const languageHandler = (option) => {
     setLanguage(option.value);
-    console.log(option.value);
+    // console.log(option.value);
   };
   return (
     <div className="flex flex-col gap-y-4 mt-24">
