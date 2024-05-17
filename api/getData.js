@@ -47,14 +47,12 @@ export const get_data_axios = async (url) => {
     return data;
   } catch (error) {
     console.error("get data error --->", error);
-    throw new Error(
-      `${error.message}: \n Please provide valid url https://www.youtube.com/....`
-    );
+    throw new Error(`${error.message}:`);
   }
 };
 
 // generate chapters from gpt
-export const generateSummary = async (subtitles, chapterType) => {
+export const generateSummary = async (subtitles, chapterType, sumLang) => {
   "use server";
   // Convert the subtitles to a string
   const openai = new OpenAI({
@@ -71,26 +69,32 @@ export const generateSummary = async (subtitles, chapterType) => {
 
     subtitlesString = subtitlesString.replace(/&#39;/g, "'");
 
-    console.log("formmated subtitles in gpt---->", subtitlesString);
+    // console.log(
+    //   "formmated subtitles in gpt---->",
+    //   subtitlesString.slice(0, 5000)
+    // );
 
-    const complexPrompt = `
+    const promptWithLangComplex = `
   Given the following video transcript:
 
   ${subtitlesString}
 
-  Your task is to convert it into YouTube-like chapters divided into timestamps. 
+  Your task is to convert it into YouTube-like chapters divided into timestamps in ${sumLang}. 
   The transcript includes timestamps formatted as minutes and seconds (e.g., 1:23) indicating the start of each section. 
   Your output should consist of a list of timestamps along with a brief description of the content covered in each section. 
   Ensure that the timestamps accurately reflect the content discussed in the transcript and that the descriptions are concise yet informative. 
   Your goal is to facilitate easier navigation and reference within the video for viewers by breaking down the content into manageable chapters.
+
+  After creating the chapters, provide a short summarized description of the video 
+based on the transcript in a new line. This summary should also be in ${sumLang}.
   `;
 
-    const simplePrompt = `
-  Given the following video transcript:
+    const promptWithLangSimple = `
+Given the following video transcript:
 
 ${subtitlesString}
 
-Your task is to convert it into YouTube-like chapters divided into timestamps. 
+Your task is to convert it into YouTube-like chapters divided into timestamps in ${sumLang}. 
 The transcript includes timestamps indicating 
 the start of each section. Ensure that the timestamps 
 accurately reflect the content discussed in the transcript. 
@@ -98,10 +102,12 @@ Your goal is to facilitate easier navigation and reference within the video for
 viewers by breaking down the content into manageable chapters with heading and 
 timestamp(in minutes) only.
 
-After creating the chapters, provide a short summarized description of the video based on the transcript in a new line.
+After creating the chapters, provide a short summarized description of the video 
+based on the transcript in a new line. This summary should also be in ${sumLang}.
 `;
 
-    const prompt = chapterType === "simple" ? simplePrompt : complexPrompt;
+    const prompt =
+      chapterType === "simple" ? promptWithLangSimple : promptWithLangComplex;
     // const maxTockens = chapterType === "simple" ? 400 : 600;
 
     // Send the subtitles to OpenAIs
@@ -173,7 +179,7 @@ export const fetchTranscript = async (url) => {
 
     if (captions.length > 0) {
       const selected_caption = captions[0];
-      // console.log("base url", selected_caption.baseUrl);
+      console.log("base url", selected_caption);
 
       const subtitles_data = await get_data_axios(selected_caption.baseUrl);
 
@@ -210,11 +216,11 @@ export const fetchTranscript = async (url) => {
 };
 
 //get summery
-export const getSummery = async (url, chapterType) => {
+export const getSummery = async (url, chapterType, sumLang) => {
   "use server";
   try {
     const transcript = await fetchTranscript(url);
-    const summary = await generateSummary(transcript, chapterType);
+    const summary = await generateSummary(transcript, chapterType, sumLang);
     return summary;
   } catch (error) {
     console.log("getSummery error -->", error.message);

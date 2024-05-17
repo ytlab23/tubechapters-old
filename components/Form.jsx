@@ -18,13 +18,26 @@ const Form = ({ getSummery }) => {
     { label: "Simple", value: "simple" },
     { label: "Complex", value: "complex" },
   ];
+  const langOptions = [
+    { label: "🇺🇸", value: "English" },
+    { label: "🇪🇸", value: "Spanish" },
+    { label: "🇫🇷", value: "French" },
+    { label: "🇮🇹", value: "italian" },
+    { label: "🇩🇪", value: "German" },
+    { label: "🇵🇹", value: "Portuguese" },
+  ];
   const [chapterType, setChapterType] = useState(options[0].value);
+  const [language, setLanguage] = useState(langOptions[0].value);
 
   const chapterTypeHandler = (option) => {
     setChapterType(option.value);
     console.log(option.value);
   };
 
+  const languageHandler = (option) => {
+    setLanguage(option.value);
+    console.log(option.value);
+  };
   return (
     <div className="flex flex-col gap-y-4 mt-24">
       <h2 className="text-base text-primary">Add your YouTube URL 👇</h2>
@@ -34,6 +47,19 @@ const Form = ({ getSummery }) => {
         className="outline-none border border-primary/40 bg-back px-8 py-4 rounded-xl"
         onChange={(e) => setUrl(e.target.value)}
       />
+      <div className="flex justify-center items-center gap-x-2">
+        <h2 className=" text-primary font-normal text-xs max-w-[50%]">
+          Chapter and Summery Language
+        </h2>
+        <Select
+          className="basic-single self-center cursor-pointer"
+          classNamePrefix="select"
+          defaultValue={langOptions[0]}
+          options={langOptions}
+          onChange={languageHandler}
+        />
+      </div>
+
       <div className="flex justify-center gap-x-4">
         <button
           className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
@@ -45,7 +71,7 @@ const Form = ({ getSummery }) => {
               setShowDesc(false);
               setData([]);
               setLoading(true);
-              let data = await getSummery(url.trim(), chapterType);
+              let data = await getSummery(url.trim(), chapterType, language);
               // console.log("front data", data);
               if (typeof data !== "string") {
                 setLoading(false);
