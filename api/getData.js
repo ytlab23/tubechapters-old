@@ -6,6 +6,8 @@ import OpenAI from "openai";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import axios from "axios";
 
+// import { GoogleGenerativeAI } from "@google/generative-ai"
+
 // list of userAgents
 const userAgents = [
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.3",
@@ -51,88 +53,91 @@ export const get_data_axios = async (url) => {
   }
 };
 
-// generate chapters from gpt
-export const generateSummary = async (subtitles, chapterType, sumLang) => {
-  "use server";
-  // Convert the subtitles to a string
+export const gptResponseHandler = async (subSubtitle, chapterType, sumLang) => {
   const openai = new OpenAI({
     apiKey: process.env.API_KEY,
   });
-  // console.log("subtitles in gpt---->", subtitles);
 
-  try {
-    let subtitlesString = subtitles
-      .map((subtitle) => {
-        return `${subtitle?.time} ${subtitle?.lines}`;
-      })
-      .join("\n");
+  const promptWithLangSimple = `
+Given the following 12-minute segment of a video transcript:
 
-    subtitlesString = subtitlesString.replace(/&#39;/g, "'");
+${subSubtitle}
 
-    // console.log(
-    //   "formmated subtitles in gpt---->",
-    //   subtitlesString.slice(0, 5000)
-    // );
+Due to character limitations, this segment is part of a longer video transcript that has been divided into 12-minute segments. 
 
-    const promptWithLangComplex = `
-  Given the following video transcript:
+Your task is to convert this segment into a YouTube-like chapter with a timestamp in ${sumLang}. This segment includes timestamps indicating the start of each section. Ensure that the timestamps accurately reflect the content discussed in this segment, are within this 12-minute duration.
 
-  ${subtitlesString}
+Your goal is to facilitate easier navigation and reference within the video for viewers by breaking down this segment into a manageable chapter with a heading and timestamp (in minutes) only.
 
-  Your task is to convert it into YouTube-like chapters divided into timestamps in ${sumLang}. 
-  The transcript includes timestamps formatted as minutes and seconds (e.g., 1:23) indicating the start of each section. 
-  Your output should consist of a list of timestamps along with a brief description of the content covered in each section. 
-  Ensure that the timestamps accurately reflect the content discussed in the transcript and that the descriptions are concise yet informative. 
-  Your goal is to facilitate easier navigation and reference within the video for viewers by breaking down the content into manageable chapters.
+After creating the chapter, provide a short summarized description of this 12-minute segment based on the transcript in a new line. This summary should also be in ${sumLang}.
 
-  After creating the chapters, provide a short summarized description of the video 
-based on the transcript in a new line. This summary should also be in ${sumLang}.
-  `;
+Please note that this is a segment of a longer video, and your response should reflect only the content of this segment.
 
-    const promptWithLangSimple = `
-Given the following video transcript:
+Please note that to Return the response exactly in the following format: 
+{
+  chapters: ["chapter1", "chapter2", ...],
+  segmentSummary: "summary"
+}
 
-${subtitlesString}
-
-Your task is to convert it into YouTube-like chapters divided into timestamps in ${sumLang}. 
-The transcript includes timestamps indicating 
-the start of each section. Ensure that the timestamps 
-accurately reflect the content discussed in the transcript. 
-Your goal is to facilitate easier navigation and reference within the video for 
-viewers by breaking down the content into manageable chapters with heading and 
-timestamp(in minutes) only.
-
-After creating the chapters, provide a short summarized description of the video 
-based on the transcript in a new line. This summary should also be in ${sumLang}.
 `;
 
-    const prompt =
-      chapterType === "simple" ? promptWithLangSimple : promptWithLangComplex;
-    // const maxTockens = chapterType === "simple" ? 400 : 600;
+  const prompt = promptWithLangSimple;
+  // const maxTockens = chapterType === "simple" ? 400 : 600;
 
-    // Send the subtitles to OpenAIs
-    const result = await openai.chat.completions.create({
-      messages: [
-        {
-          role: "system",
-          content: prompt,
-        },
-      ],
-      max_tokens: 600,
-      model: "gpt-4-turbo",
-    });
+  console.log("prompt length --->", prompt.length);
 
-    let gptResponse = result.choices[0].message.content;
+  // Send the subtitles to OpenAIs
+  const result = await openai.chat.completions.create({
+    messages: [
+      {
+        role: "system",
+        content: prompt,
+      },
+    ],
+    max_tokens: 400,
+    model: "gpt-4-turbo",
+  });
 
-    let startOfHeading = gptResponse.indexOf("0:00");
+  let gptResponse = result.choices[0].message.content;
 
-    if (startOfHeading) {
-      gptResponse = gptResponse.slice(startOfHeading).split("\n");
-    } else {
-      gptResponse = gptResponse.split("\n");
+  // let startOfHeading = gptResponse.indexOf("0:00");
+
+  // if (startOfHeading) {
+  //   gptResponse = gptResponse.slice(startOfHeading).split("\n");
+  // } else {
+  //   gptResponse = gptResponse.split("\n");
+  // }
+  return gptResponse;
+};
+
+// generate chapters from gpt
+export const generateSummary = async (subtitles, chapterType, sumLang) => {
+  "use server";
+
+  try {
+    let gptResponses = [];
+    for (let arr of subtitles) {
+      let subString = arr
+        .map((subtitle) => {
+          return `${subtitle?.time} ${subtitle?.lines}`;
+        })
+        .join("\n");
+      subString = subString.replace(/&#39;/g, "'");
+
+      let gptResponse = await gptResponseHandler(
+        subString,
+        chapterType,
+        sumLang
+      );
+      gptResponses.push(JSON.parse(gptResponse));
+      // console.log(subString.length);
+      // gptResponses.push(subString);
     }
-    // console.log("gptResponse-->", gptResponse);
-    return gptResponse;
+
+    console.log(gptResponses);
+
+    return gptResponses;
+    // return gptResponse;
   } catch (error) {
     console.log("not subtitles was found");
     throw new Error(`${error.message}`);
@@ -183,26 +188,43 @@ export const fetchTranscript = async (url) => {
 
       const subtitles_data = await get_data_axios(selected_caption.baseUrl);
 
-      let subtitle = "";
+      let subtitle = [];
       xml2js.parseString(subtitles_data, async (err, result) => {
         if (err) {
           console.log("xml2js parse error --->", err);
           return "Error parsing XML.";
         } else {
-          const parsed_subtitles = result.transcript.text.map((item) => {
-            const minutes = Math.floor(Number(item.$.start) / 60);
-            const remainingSeconds = Math.round(Number(item.$.start) % 60);
-            const time = `${minutes}:${
-              remainingSeconds < 10 ? "0" : ""
-            }${remainingSeconds}`;
+          let maxmin = 12;
+          let arr = [];
+          let cutedArr = [];
+          result.transcript.text.forEach((item) => {
+            // console.log("transcript response", item);
+            const totalSeconds = Number(item.$.start);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds - hours * 3600) / 60);
+            const remainingSeconds = Math.round(totalSeconds % 60);
+
+            const time = `${hours < 10 ? "0" : ""}${hours}:${
+              minutes < 10 ? "0" : ""
+            }${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
             const lines = item._;
+
+            if (minutes < maxmin) {
+              cutedArr.push({ time, lines });
+            } else {
+              arr.push(cutedArr);
+              cutedArr = [];
+              maxmin += 12;
+            }
 
             return { time, lines };
           });
-
-          subtitle = parsed_subtitles;
+          // console.log(arr);
+          arr.push(cutedArr);
+          subtitle = arr;
         }
       });
+
       return subtitle;
     } else {
       console.log("No captions avaliable for this page");
@@ -221,7 +243,8 @@ export const getSummery = async (url, chapterType, sumLang) => {
   try {
     const transcript = await fetchTranscript(url);
     const summary = await generateSummary(transcript, chapterType, sumLang);
-    return summary;
+    // console.log(summary, summary.length);
+    // return summary;
   } catch (error) {
     console.log("getSummery error -->", error.message);
     return error.message;
