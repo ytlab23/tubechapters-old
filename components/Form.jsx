@@ -31,12 +31,10 @@ const Form = ({ getSummery }) => {
 
   const chapterTypeHandler = (option) => {
     setChapterType(option.value);
-    // console.log(option.value);
   };
 
   const languageHandler = (option) => {
     setLanguage(option.value);
-    // console.log(option.value);
   };
   return (
     <div className="flex flex-col gap-y-4 mt-24">
@@ -71,8 +69,8 @@ const Form = ({ getSummery }) => {
               setShowDesc(false);
               setData([]);
               setLoading(true);
+              console.log(language);
               let data = await getSummery(url.trim(), chapterType, language);
-              // console.log("front data", data);
               if (typeof data !== "string") {
                 setLoading(false);
                 setError(false);
