@@ -53,7 +53,12 @@ export const get_data_axios = async (url) => {
   }
 };
 
-export const gptResponseHandler = async (subSubtitle, chapterType, sumLang) => {
+export const gptResponseHandler = async (
+  subSubtitle,
+  generateType,
+  chapterType,
+  sumLang
+) => {
   const openai = new OpenAI({
     apiKey: process.env.API_KEY,
   });
@@ -65,7 +70,7 @@ ${subSubtitle}
 
 Due to character limitations, this segment is part of a longer video transcript that has been divided into 12-minute segments. 
 
-Your task is to convert this segment into a YouTube-like chapter with a timestamp in ${sumLang}. This segment includes timestamps indicating the start of each section. Ensure that the timestamps accurately reflect the content discussed in this segment, are within this 12-minute duration.
+Your task is to convert this segment into a YouTube-like chapter with a timestamp in ${sumLang}. This segment includes timestamps indicating the start of each section.
 
 Your goal is to facilitate easier navigation and reference within the video for viewers by breaking down this segment into a manageable chapter with a heading and timestamp (in minutes) only.
 
@@ -81,7 +86,14 @@ Please note that to Return the response exactly in the following format:
 
 `;
 
-  const prompt = promptWithLangSimple;
+  const summeryPrompt = `Given the following combined segmented transcript summaries:
+  ${subSubtitle}
+
+  Generate a concise summary of the entire content of the video based on the combined segmented transcript summaries i gave you.
+  `;
+
+  const prompt =
+    generateType === "summary" ? summeryPrompt : promptWithLangSimple;
   // const maxTockens = chapterType === "simple" ? 400 : 600;
 
   console.log("prompt length --->", prompt.length);
@@ -100,13 +112,6 @@ Please note that to Return the response exactly in the following format:
 
   let gptResponse = result.choices[0].message.content;
 
-  // let startOfHeading = gptResponse.indexOf("0:00");
-
-  // if (startOfHeading) {
-  //   gptResponse = gptResponse.slice(startOfHeading).split("\n");
-  // } else {
-  //   gptResponse = gptResponse.split("\n");
-  // }
   return gptResponse;
 };
 
@@ -115,7 +120,7 @@ export const generateSummary = async (subtitles, chapterType, sumLang) => {
   "use server";
 
   try {
-    let gptResponses = [];
+    let gptResponses = { chapters: [], summery: "" };
     for (let arr of subtitles) {
       let subString = arr
         .map((subtitle) => {
@@ -129,13 +134,22 @@ export const generateSummary = async (subtitles, chapterType, sumLang) => {
         chapterType,
         sumLang
       );
-      gptResponses.push(JSON.parse(gptResponse));
-      // console.log(subString.length);
-      // gptResponses.push(subString);
+      gptResponse = JSON.parse(gptResponse);
+      gptResponses.chapters.push(...gptResponse.chapters);
+      console.log(gptResponse);
+      gptResponses.summery += gptResponse.segmentSummary;
     }
 
-    console.log(gptResponses);
-
+    const videoSummary = await gptResponseHandler(
+      gptResponses.summery,
+      "summary",
+      chapterType,
+      sumLang
+    );
+    // console.log(videoSummary);
+    if (videoSummary) {
+      gptResponses.summery = videoSummary;
+    }
     return gptResponses;
     // return gptResponse;
   } catch (error) {
@@ -242,9 +256,14 @@ export const getSummery = async (url, chapterType, sumLang) => {
   "use server";
   try {
     const transcript = await fetchTranscript(url);
-    const summary = await generateSummary(transcript, chapterType, sumLang);
+    const summary = await generateSummary(
+      transcript,
+      "chapter",
+      chapterType,
+      sumLang
+    );
     // console.log(summary, summary.length);
-    // return summary;
+    return summary;
   } catch (error) {
     console.log("getSummery error -->", error.message);
     return error.message;

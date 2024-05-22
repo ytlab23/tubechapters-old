@@ -76,11 +76,8 @@ const Form = ({ getSummery }) => {
               if (typeof data !== "string") {
                 setLoading(false);
                 setError(false);
-                const last = data?.length;
-                let description = data?.slice(last - 2, last + 1);
-                setDesc(description?.join("\n"));
-                data = data?.slice(0, last - 2);
-                setData(data);
+                setDesc(data.summery);
+                setData(data.chapters);
               } else {
                 setLoading(false);
                 setError(true);
