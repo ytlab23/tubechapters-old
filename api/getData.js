@@ -1,8 +1,6 @@
 import jsdom from "jsdom";
 const { JSDOM } = jsdom;
 import xml2js from "xml2js";
-import OpenAI from "openai";
-// import puppeteer from "puppeteer";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import axios from "axios";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -88,6 +86,7 @@ Return the response in the following format:
   const text = response.text();
   return text;
 };
+
 // generate chapters from gpt
 export const generateSummary = async (subtitles, chapterType, sumLang) => {
   "use server";
