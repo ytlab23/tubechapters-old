@@ -5,6 +5,7 @@ import OpenAI from "openai";
 // import puppeteer from "puppeteer";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import axios from "axios";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // import { GoogleGenerativeAI } from "@google/generative-ai"
 
@@ -102,32 +103,82 @@ export const gptResponseHandler = async (
   return gptResponse;
 };
 
+export const geminiResponseHandler = async (
+  subSubtitle,
+  generateType,
+  chapterType,
+  sumLang
+) => {
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  const promptWithLangSimple = `
+  Task: Convert Video Transcript Segment into YouTube-Like Chapters (Language: ${sumLang})
+
+  Given the following segment of a video transcript:
+
+${subSubtitle}
+
+Due to character limitations, this segment is part of a longer video transcript that has been divided into segments.
+
+Your task is to convert this segment into a YouTube-like chapter format with timestamps and title only. Follow these guidelines:
+
+Timestamps: Include timestamps indicating the start of each section.
+Chapter Titles: Create chapter titles for each section.
+Navigation and Reference: The goal is to facilitate easier navigation and reference within the video for viewers.
+Chapter Interval: Chapters should be at least 4 minutes apart but not exactly.
+Summary: After creating the chapters, provide a very short summarized description of this segment based on the transcript.
+
+Please note:
+This is a segment of a longer video, so your response should reflect only the content of this segment.
+
+The chapter format should look like this: (timestamp) - Chapter Title and in ${sumLang}.
+
+Return the response in the following format:
+{
+  "chapters": ["chapter1", "chapter2", ...],
+  "segmentSummary": "summary"
+}
+`;
+
+  const summeryPrompt = `Given the following combined segmented transcript summaries:
+  ${subSubtitle}
+
+  Generate a concise summary of the entire content of the video based on the combined segmented transcript summaries i gave you. 
+  Make the summary in ${sumLang}.
+  `;
+
+  const prompt =
+    generateType === "summary" ? summeryPrompt : promptWithLangSimple;
+  console.log("prompt", prompt.length);
+  const result = await model.generateContent(prompt);
+  const response = result.response;
+  const text = response.text();
+  return text;
+};
 // generate chapters from gpt
 export const generateSummary = async (subtitles, chapterType, sumLang) => {
   "use server";
-
+  // subtitles.map((sub) => console.log(sub.length));
   try {
     let gptResponses = { chapters: [], summery: "" };
-    for (let arr of subtitles) {
-      let subString = arr
-        .map((subtitle) => {
-          return `${subtitle?.time} ${subtitle?.lines}`;
-        })
-        .join("\n");
-      subString = subString.replace(/&#39;/g, "'");
-
-      let gptResponse = await gptResponseHandler(
-        subString,
+    for (let sub of subtitles) {
+      // console.log("subString", subString, subString.length);
+      let gptResponse = await geminiResponseHandler(
+        sub,
         "chapter",
         chapterType,
         sumLang
       );
+      const first = gptResponse.indexOf("{");
+      const last = gptResponse.indexOf("}");
+      gptResponse = gptResponse.slice(first, last + 1);
       gptResponse = JSON.parse(gptResponse);
       gptResponses.chapters.push(...gptResponse.chapters);
       gptResponses.summery += gptResponse.segmentSummary;
     }
 
-    const videoSummary = await gptResponseHandler(
+    const videoSummary = await geminiResponseHandler(
       gptResponses.summery,
       "summary",
       chapterType,
@@ -190,11 +241,11 @@ export const fetchTranscript = async (url) => {
           console.log("xml2js parse error --->", err);
           return "Error parsing XML.";
         } else {
-          let maxmin = 12;
+          let maxSecond = 1000;
           let arr = [];
-          let cutedArr = [];
+          let cutedArr = "";
           result.transcript.text.forEach((item) => {
-            const totalSeconds = Number(item.$.start);
+            const totalSeconds = Math.floor(Number(item.$.start));
             const hours = Math.floor(totalSeconds / 3600);
             const minutes = Math.floor((totalSeconds - hours * 3600) / 60);
             const remainingSeconds = Math.round(totalSeconds % 60);
@@ -203,19 +254,25 @@ export const fetchTranscript = async (url) => {
               minutes < 10 ? "0" : ""
             }${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
             const lines = item._;
+            // console.log(maxSecond);
 
-            if (minutes < maxmin) {
-              cutedArr.push({ time, lines });
+            // console.log({ time, lines });
+
+            if (totalSeconds < maxSecond) {
+              cutedArr += `${time} ${lines}. `;
+              cutedArr = cutedArr.replace(/&#39;/g, "'");
             } else {
               arr.push(cutedArr);
-              cutedArr = [];
-              maxmin += 12;
+              cutedArr = "";
+              maxSecond += 1000;
             }
-
-            return { time, lines };
           });
+          if (cutedArr.length > 12000) {
+            arr.push(cutedArr);
+          } else {
+            arr[arr.length - 1] = arr[arr.length - 1] + cutedArr;
+          }
 
-          arr.push(cutedArr);
           subtitle = arr;
         }
       });
