@@ -7,22 +7,6 @@ import { HttpsProxyAgent } from "https-proxy-agent";
 import axios from "axios";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// import { GoogleGenerativeAI } from "@google/generative-ai"
-
-// list of userAgents
-const userAgents = [
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.3",
-  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:125.0) Gecko/20100101 Firefox/125.0",
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0",
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0",
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.3",
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0",
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 OPR/109.0.0.0",
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.3",
-  "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0",
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.4",
-];
-
 // request time delyer function
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -30,17 +14,11 @@ const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 export const get_data_axios = async (url) => {
   "use server";
   try {
-    // dynamic userAgent
-    const randomUserAgent =
-      userAgents[Math.floor(Math.random() * userAgents.length)];
-
     // making a delay before a request
     await delay(3000);
-
     const agent = new HttpsProxyAgent(
       `http://${process.env.PACKET_USERNAME}:${process.env.PACKET_PASSWORD}@${process.env.PACKET_IP}:${process.env.PACKET_PORT}`
     );
-
     const response = await axios.get(url, {
       httpsAgent: agent,
     });
@@ -52,55 +30,6 @@ export const get_data_axios = async (url) => {
     console.error("get data error --->", error);
     throw new Error(`${error.message}:`);
   }
-};
-
-export const gptResponseHandler = async (
-  subSubtitle,
-  generateType,
-  chapterType,
-  sumLang
-) => {
-  const openai = new OpenAI({
-    apiKey: process.env.API_KEY,
-  });
-
-  const promptWithLangSimple = `
-  You are given a segment from the transcript of a YouTube video. Your task is to create a few concise and relevant chapter titles that can be used as YouTube chapter markers. These chapters should be based on significant content changes and should be at least 5 minutes apart. Additionally, provide appropriate timestamps for the start of each chapter in ${sumLang}. 
-  Here is the segment:
-  ${subSubtitle}
-
-  Please note that to Return the response exactly in the following format: 
-  {
-    chapters: ["chapter1", "chapter2", ...],
-    segmentSummary: "summary"
-  }
-`;
-
-  const summeryPrompt = `Given the following combined segmented transcript summaries:
-  ${subSubtitle}
-
-  Generate a concise summary of the entire content of the video based on the combined segmented transcript summaries i gave you. 
-  Make the summary in ${sumLang}.
-  `;
-
-  const prompt =
-    generateType === "summary" ? summeryPrompt : promptWithLangSimple;
-
-  // Send the subtitles to OpenAIs
-  const result = await openai.chat.completions.create({
-    messages: [
-      {
-        role: "system",
-        content: prompt,
-      },
-    ],
-    max_tokens: 400,
-    model: "gpt-4-turbo",
-  });
-
-  let gptResponse = result.choices[0].message.content;
-
-  return gptResponse;
 };
 
 export const geminiResponseHandler = async (
@@ -150,7 +79,7 @@ Return the response in the following format:
 
   const prompt =
     generateType === "summary" ? summeryPrompt : promptWithLangSimple;
-  console.log("prompt", prompt.length);
+
   const result = await model.generateContent(prompt);
   const response = result.response;
   const text = response.text();
