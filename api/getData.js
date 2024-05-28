@@ -28,7 +28,7 @@ export const get_data_axios = async (url) => {
     return data;
   } catch (error) {
     console.error("get data error --->", error);
-    throw new Error(`${error.message}:`);
+    throw new Error(`Invalid link or error while fetching please try again`);
   }
 };
 
@@ -54,12 +54,15 @@ Your task is to convert this segment into a YouTube-like chapter format with tim
 
 Timestamps: Include timestamps indicating the start of each section.
 Chapter Titles: Create chapter titles for each section.
+
 Navigation and Reference: The goal is to facilitate easier navigation and reference within the video for viewers.
-Chapter Interval: Chapters should be at least 4 minutes apart but not exactly.
+
+Chapter Interval: Chapter intervals should not be detailed and at least 5-minutes apart.
+
 Summary: After creating the chapters, provide a very short summarized description of this segment based on the transcript.
 
 Please note:
-This is a segment of a longer video, so your response should reflect only the content of this segment.
+Chapter intervals should not be detailed and at least 5-minutes apart.
 
 The chapter format should look like this: (timestamp) - Chapter Title and in ${sumLang}.
 
