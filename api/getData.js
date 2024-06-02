@@ -5,6 +5,13 @@ import { HttpsProxyAgent } from "https-proxy-agent";
 import axios from "axios";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+const API_KEY_1 = process.env.GEMINI_API_KEY_1;
+const API_KEY_2 = process.env.GEMINI_API_KEY_2;
+const API_KEY_3 = process.env.GEMINI_API_KEY_3;
+const API_KEY_4 = process.env.GEMINI_API_KEY_4;
+const API_KEY_5 = process.env.GEMINI_API_KEY_5;
+const API_KEY_6 = process.env.GEMINI_API_KEY_6;
+
 // request time delyer function
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -36,7 +43,16 @@ export const geminiResponseHandler = async (
   chapterType,
   sumLang
 ) => {
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  const API_KEYS = [
+    API_KEY_1,
+    API_KEY_2,
+    API_KEY_3,
+    API_KEY_4,
+    API_KEY_5,
+    API_KEY_6,
+  ];
+  const API_KEY = API_KEYS[Math.floor(Math.random() * API_KEYS.length)];
+  const genAI = new GoogleGenerativeAI(API_KEY);
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   const promptWithLangSimple = `
