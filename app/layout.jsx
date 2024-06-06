@@ -1,9 +1,13 @@
-import { Inter } from "next/font/google";
+import { Jacques_Francois } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
 import Nav from "@/components/Nav";
 
-const inter = Inter({ subsets: ["latin"] });
+const jacques_Francois = Jacques_Francois({
+  weight: ["400"],
+  style: ["normal"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata = {
   title: "Create Next App",
@@ -13,7 +17,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} md:px-16 px-2 bg-back`}>
+      <body className={`${jacques_Francois.className} md:px-16 px-2 bg-back`}>
         <Nav />
         <div className="min-h-[80vh] flex flex-col justify-center items-center relative ">
           {children}
