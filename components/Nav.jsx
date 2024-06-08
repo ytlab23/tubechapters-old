@@ -1,5 +1,5 @@
-import React from "react";
-import Link from "next/link";
+import React from 'react';
+import Link from 'next/link';
 
 const Nav = () => {
   return (
@@ -10,6 +10,9 @@ const Nav = () => {
       <div className="flex gap-x-8 items-center">
         <Link href="#about" className="text-primary text-base font-normal">
           About
+        </Link>
+        <Link href="#how" className="text-primary text-base font-normal">
+          How it works
         </Link>
       </div>
     </nav>
