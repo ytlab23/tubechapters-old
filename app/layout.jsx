@@ -3,6 +3,8 @@ import './globals.css';
 import Nav from '@/components/Nav';
 import AboutBoxContainer from '@/components/AboutBoxContainer';
 import HowItWorks from '@/components/HowItWorks';
+import Link from 'next/link';
+import { BiUpArrowAlt } from 'react-icons/bi';
 
 const jacques_Francois = Jacques_Francois({
   weight: ['400'],
@@ -62,6 +64,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${jacques_Francois.className} md:px-16 px-2 bg-back`}>
+        <Link
+          href={'#home'}
+          className="fixed bottom-8 right-16 btn bg-[#dc2626] w-[40px] h-[40px] flex justify-center items-center  text-back font-normal text-xl rounded-full"
+        >
+          <BiUpArrowAlt />
+        </Link>
         <Nav />
         <div className="min-h-[80vh] flex flex-col justify-center items-center relative ">
           {children}
@@ -112,6 +120,12 @@ export default function RootLayout({ children }) {
             TubeChapters{`'`} free plan and see how powerful it is to make
             chapters quickly and easily.
           </p>
+          <Link
+            href={'#home'}
+            className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
+          >
+            Generate
+          </Link>
         </div>
       </body>
     </html>

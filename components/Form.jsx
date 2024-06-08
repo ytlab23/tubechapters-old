@@ -1,30 +1,30 @@
-"use client";
-import { useState } from "react";
-import CopyHandler from "./CopyHandler";
-import ResultContainer from "./ResultContainer";
-import Select from "react-select";
+'use client';
+import { useState } from 'react';
+import CopyHandler from './CopyHandler';
+import ResultContainer from './ResultContainer';
+import Select from 'react-select';
 
 const Form = ({ getSummery }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [url, setUrl] = useState("");
-  const [copyText, setCopyText] = useState("Copy");
-  const [descText, setDescText] = useState("Copy");
-  const [errorText, setErrorText] = useState("");
-  const [desc, setDesc] = useState("");
+  const [url, setUrl] = useState('');
+  const [copyText, setCopyText] = useState('Copy');
+  const [descText, setDescText] = useState('Copy');
+  const [errorText, setErrorText] = useState('');
+  const [desc, setDesc] = useState('');
   const [showDesc, setShowDesc] = useState(false);
   const [error, setError] = useState(false);
   const options = [
-    { label: "Simple", value: "simple" },
-    { label: "Complex", value: "complex" },
+    { label: 'Simple', value: 'simple' },
+    { label: 'Complex', value: 'complex' },
   ];
   const langOptions = [
-    { label: "🇺🇸", value: "English" },
-    { label: "🇪🇸", value: "Spanish" },
-    { label: "🇫🇷", value: "French" },
-    { label: "🇮🇹", value: "italian" },
-    { label: "🇩🇪", value: "German" },
-    { label: "🇵🇹", value: "Portuguese" },
+    { label: '🇺🇸', value: 'English' },
+    { label: '🇪🇸', value: 'Spanish' },
+    { label: '🇫🇷', value: 'French' },
+    { label: '🇮🇹', value: 'italian' },
+    { label: '🇩🇪', value: 'German' },
+    { label: '🇵🇹', value: 'Portuguese' },
   ];
   const [chapterType, setChapterType] = useState(options[0].value);
   const [language, setLanguage] = useState(langOptions[0].value);
@@ -62,15 +62,15 @@ const Form = ({ getSummery }) => {
         <button
           className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
           onClick={async () => {
-            if (url !== "") {
+            if (url !== '') {
               setError(false);
-              setCopyText("Copy");
-              setDescText("Copy");
+              setCopyText('Copy');
+              setDescText('Copy');
               setShowDesc(false);
               setData([]);
               setLoading(true);
               let data = await getSummery(url.trim(), chapterType, language);
-              if (typeof data !== "string") {
+              if (typeof data !== 'string') {
                 setLoading(false);
                 setError(false);
                 setDesc(data.summery);
@@ -82,11 +82,11 @@ const Form = ({ getSummery }) => {
               }
             } else {
               setError(true);
-              setErrorText("Please provide a link");
+              setErrorText('Please provide a link');
             }
           }}
         >
-          {loading ? <span className="loader"></span> : "Generate"}
+          {loading ? <span className="loader"></span> : 'Generate'}
         </button>
         <Select
           className="basic-single max-w-[300px] self-center cursor-pointer"
@@ -111,7 +111,7 @@ const Form = ({ getSummery }) => {
             <CopyHandler
               setCopyText={setCopyText}
               setDescText={setDescText}
-              copyData={data?.join("\n")}
+              copyData={data?.join('\n')}
               format="timestamps"
               title={copyText}
             />
