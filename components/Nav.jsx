@@ -14,6 +14,9 @@ const Nav = () => {
         <Link href="#how" className="text-primary text-base font-normal">
           How it works
         </Link>
+        <Link href="#faqs" className="text-primary text-base font-normal">
+          FAQs
+        </Link>
       </div>
     </nav>
   );
