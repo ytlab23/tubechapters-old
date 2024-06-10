@@ -433,27 +433,27 @@ export default function RootLayout({ children }) {
           >
             TubeChapters: Your AI-Powered Chapter Creator
           </Link>
-          <p className="text-sm text-primary">
+          <p className="text-base text-primary">
             <Link href="#home" className="text-[#dc2626]">
               TubeChapters
             </Link>{' '}
             is a one stop solution that uses artificial intelligence to create
             chapters for your YouTube videos.
           </p>
-          <p className="text-sm text-primary">
+          <p className="text-base text-primary">
             TubeChapters allows you to easily add chapters to YouTube videos.
             Simply paste your video URL, choose a language, and let our AI do
             the rest. You may also adjust the chapter titles and timestamps to
             ensure that they exactly match your content.
           </p>
-          <p className="text-sm text-primary">
+          <p className="text-base text-primary">
             <Link href="#home" className="text-[#dc2626]">
               TubeChapters
             </Link>{' '}
             can also help you with other elements of video for search engine
             optimization, such as creating titles, descriptions, and keywords.
           </p>
-          <p className="text-sm text-primary">
+          <p className="text-base text-primary">
             Are you ready to transform your YouTube videos into easily
             accessible pieces of information? Try TubeChapters today and see how
             it{' '}
@@ -465,7 +465,7 @@ export default function RootLayout({ children }) {
             Why Should I Use TubeChapters to Automatically Create Chapters and
             Add TimeStamps?
           </h2>
-          <p className="text-sm text-primary">
+          <p className="text-base text-primary">
             <Link href="#home" className="text-[#dc2626]">
               TubeChapters.com
             </Link>{' '}
@@ -486,7 +486,7 @@ export default function RootLayout({ children }) {
               </div>
             ))}
           </ul>
-          <p className="text-sm text-primary">
+          <p className="text-base text-primary">
             Adding chapters and time stamps to your YouTube videos is no longer
             a hassle.With{' '}
             <Link href="#home" className="text-[#dc2626]">
@@ -495,7 +495,7 @@ export default function RootLayout({ children }) {
             {`it's easy and quick to improve your video's`} performance and
             reach more people.
           </p>
-          <p className="text-sm text-primary">
+          <p className="text-base text-primary">
             Start with{' '}
             <Link href="#home" className="text-[#dc2626]">
               TubeChapters
@@ -506,7 +506,7 @@ export default function RootLayout({ children }) {
           <h2 className="text-xl mt-6 font-bold text-[#dc2626] max-w-[620px]">
             TubeChapters Goes Global.
           </h2>
-          <p className="text-sm text-primary">
+          <p className="text-base text-primary">
             There are different kinds of people on YouTube, and they speak many
             different languages. Language barriers {`shouldn't`} stop you from
             meeting people all over the world! With its multilingual features,
@@ -527,7 +527,7 @@ export default function RootLayout({ children }) {
               </div>
             ))}
           </ul>
-          <p className="text-sm text-primary">
+          <p className="text-base text-primary">
             <Link href="#home" className="text-[#dc2626]">
               TubeChapters
             </Link>{' '}

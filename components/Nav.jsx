@@ -7,14 +7,23 @@ const Nav = () => {
       <Link href="/" className="text-2xl font-bold text-[#dc2626]">
         tubechapters
       </Link>
-      <div className="flex gap-x-8 items-center">
-        <Link href="#about" className="text-primary text-base font-normal">
+      <div className="flex gap-x-4 sm:gap-x-8 items-center">
+        <Link
+          href="#about"
+          className="text-primary text-sm sm:text-base font-medium"
+        >
           About
         </Link>
-        <Link href="#how" className="text-primary text-base font-normal">
+        <Link
+          href="#how"
+          className="text-primary text-sm sm:text-base font-medium"
+        >
           How it works
         </Link>
-        <Link href="#faqs" className="text-primary text-base font-normal">
+        <Link
+          href="#faqs"
+          className="text-primary text-sm sm:text-base font-medium"
+        >
           FAQs
         </Link>
       </div>

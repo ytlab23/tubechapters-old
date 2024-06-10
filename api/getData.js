@@ -106,13 +106,9 @@ Return the response in the following format:
 // generate chapters from gpt
 export const generateSummary = async (subtitles, chapterType, sumLang) => {
   'use server';
-  // subtitles.map((sub) => console.log(sub.length));
   try {
-    // console.log('subtitle', subtitles);
     let gptResponses = { chapters: [], summery: '' };
     for (let sub of subtitles) {
-      // console.log("subString", subString, subString.length);
-
       let gptResponse = await geminiResponseHandler(
         sub,
         'chapter',
@@ -222,12 +218,10 @@ export const fetchTranscript = async (url) => {
               arr[arr.length - 1] = arr[arr.length - 1] + cutedArr;
             }
           }
-          // console.log('cutedArr', cutedArr, 'arr', arr);
 
           subtitle = arr;
         }
       });
-      console.log('subtitle', subtitle);
       return subtitle;
     } else {
       console.log('No captions avaliable for this page');
@@ -246,7 +240,6 @@ export const getSummery = async (url, chapterType, sumLang) => {
   try {
     const transcript = await fetchTranscript(url);
     const summary = await generateSummary(transcript, chapterType, sumLang);
-    // console.log(summary);
     return summary;
   } catch (error) {
     console.log('getSummery error -->', error.message);

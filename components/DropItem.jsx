@@ -7,16 +7,24 @@ const DropItem = ({ item }) => {
   return (
     <div className="flex flex-col gap-y-4">
       <div
-        className="flex items-center justify-between py-3 px-5 gap-x-16  bg-slate-500 rounded-xl"
+        className="flex items-center justify-between py-3 px-5 gap-x-2  bg-slate-500 rounded-xl"
         onClick={() => setExpand(!expand)}
       >
         <h2 className="text-base text-left font-bold text-white">
           {item.title}
         </h2>
         {expand ? (
-          <BiUpArrowAlt size={26} color="white" className="cursor-pointer" />
+          <BiUpArrowAlt
+            size={26}
+            color="white"
+            className="cursor-pointer min-w-[70px]"
+          />
         ) : (
-          <BiDownArrowAlt size={26} color="white" className="cursor-pointer" />
+          <BiDownArrowAlt
+            size={26}
+            color="white"
+            className="cursor-pointer min-w-[70px]"
+          />
         )}
       </div>
       {expand && (
