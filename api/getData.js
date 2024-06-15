@@ -239,7 +239,7 @@ export const getSummery = async (url, chapterType, sumLang) => {
   'use server';
   try {
     const transcript = await fetchTranscript(url);
-    const summary = await generateSummary(transcript, chapterType, sumLang);
+    // const summary = await generateSummary(transcript, chapterType, sumLang);
     return summary;
   } catch (error) {
     console.log('getSummery error -->', error.message);

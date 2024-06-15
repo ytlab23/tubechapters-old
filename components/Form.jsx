@@ -60,7 +60,7 @@ const Form = ({ getSummery }) => {
 
       <div className="flex justify-center gap-x-4">
         <button
-          className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
+          className="btn bg-[#dc2626] px-4 py-3 text-back font-normal text-base rounded-xl max-w-[250px] self-center min-w-[140px]"
           onClick={async () => {
             if (url !== '') {
               setError(false);
@@ -86,7 +86,11 @@ const Form = ({ getSummery }) => {
             }
           }}
         >
-          {loading ? <span className="loader"></span> : 'Generate'}
+          {loading ? (
+            <span className="loader"></span>
+          ) : (
+            'Generate YouTube Chapters'
+          )}
         </button>
         <Select
           className="basic-single max-w-[300px] self-center cursor-pointer"

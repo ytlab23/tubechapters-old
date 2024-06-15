@@ -304,9 +304,9 @@ export default function RootLayout({ children }) {
           </p>
           <Link
             href={'#home'}
-            className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
+            className="btn bg-[#dc2626] px-4 py-3 text-back font-normal text-base rounded-xl max-w-[250px] self-center min-w-[140px]"
           >
-            Generate
+            Generate YouTube Chapters
           </Link>
           <DropDowns dropDownsData={dropDownsData} />
           <h2 className="text-xl mt-6 font-bold text-[#dc2626] max-w-[620px]">
@@ -348,9 +348,9 @@ export default function RootLayout({ children }) {
           </ul>
           <Link
             href={'#home'}
-            className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
+            className="btn bg-[#dc2626] px-4 py-3 text-back font-normal text-base rounded-xl max-w-[250px] self-center min-w-[140px]"
           >
-            Generate
+            Generate YouTube Chapters
           </Link>
           <h2 className="text-xl mt-6 font-bold text-[#dc2626] max-w-[620px]">
             How to Add Chapters to a YouTube Video by Manually
@@ -423,9 +423,9 @@ export default function RootLayout({ children }) {
           </p>
           <Link
             href={'#home'}
-            className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
+            className="btn bg-[#dc2626] px-4 py-3 text-back font-normal text-base rounded-xl max-w-[250px] self-center min-w-[140px]"
           >
-            Generate
+            Generate YouTube Chapters
           </Link>
           <Link
             href={'#home'}
@@ -539,9 +539,9 @@ export default function RootLayout({ children }) {
           </p>
           <Link
             href={'#home'}
-            className="btn bg-[#dc2626] px-6 py-3 text-back font-normal text-xl rounded-xl max-w-[150px] self-center min-w-[140px]"
+            className="btn bg-[#dc2626] px-4 py-3 text-back font-normal text-base rounded-xl max-w-[250px] self-center min-w-[140px]"
           >
-            Generate
+            Generate YouTube Chapters
           </Link>
         </div>
         <div
@@ -556,8 +556,8 @@ export default function RootLayout({ children }) {
         </div>
         <footer>
           <p className="text-sm text-primary text-center my-4">
-            <Link href="#home" className="text-[#dc2626]">
-              © http://TubeChapters.com
+            <Link href="https://TubeChapters.com" className="text-[#dc2626]">
+              TubeChapters.com
             </Link>
             - Add Chapters & Timestamps To Your YouTube Video!
           </p>
