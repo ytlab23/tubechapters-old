@@ -572,7 +572,7 @@ export default function RootLayout({ children }) {
           <p className="text-sm text-primary text-center my-4">
             <Link href="https://TubeChapters.com" className="text-[#dc2626]">
               TubeChapters.com
-            </Link>
+            </Link>{' '}
             - Add Chapters & Timestamps To Your YouTube Video!
           </p>
         </footer>
