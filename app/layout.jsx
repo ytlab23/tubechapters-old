@@ -90,11 +90,11 @@ export default function RootLayout({ children }) {
     {
       title: 'In the video description:',
       content:
-        'The person who made the video can add a list of timestamps and  titles that go with them in the video description. People can go straight to a specific point in the video when they click on a timestamp.',
+        'The person who made the video can add a list of timestamps and titles that go with them in the video description. People can go straight to a specific point in the video when they click on a timestamp.',
     },
     {
       title: 'Video chapters:',
-      content: `Chapters go one step further than timestamps by adding clickable sections to the video progress bar. It's even easier to find your way around the video because each part has a title and a thumbnail preview.`,
+      content: `Chapters go one step further than timestamps by adding clickable sections to the video progress bar. It's even easier to find your way around the video because each part has a title and a thumbnail preview. So how to add chapters? Let’s find out below.`,
     },
   ];
   const howToAddChaptersManually = [
@@ -131,12 +131,12 @@ export default function RootLayout({ children }) {
     {
       title: 'Watching and Making Notes:',
       content:
-        'It takes time and care to type each timestamp and title accurately.',
+        'You need to watch the whole video to find the important parts where you want to place the chapters.',
     },
     {
       title: 'Editing and Formatting:',
       content:
-        'Want chapters in a different language besides English? TubeChapters supports many different languages. Just pick the language that your video needs and let the AI do its thing.',
+        'It takes time and care to type each timestamp and title accurately.',
     },
     {
       title: 'Potential for Errors:',
@@ -145,9 +145,8 @@ export default function RootLayout({ children }) {
     },
     {
       title: 'Videos That Are Too Long:',
-      content: `Your video is ready to go in seconds! Copy your complete work with captions and clear chapters for a professional and engaging video experience.
+      content: `The process takes longer when the video is too long.
   `,
-      othercontent: 'The process takes longer when the video is too long.',
     },
   ];
   const whyTubeChapters = [
@@ -323,11 +322,11 @@ export default function RootLayout({ children }) {
             effortlessly and start receiving the benefits in no time.
           </p>
           <p className="text-base text-primary">
-            On YouTube, a timestamp is a link that can be clicked on to go to a
-            certain point in a video. It{"'"}s basically a time marker that
-            points to a certain part of the video. Timestamps are often used in
-            tutorials, long videos, and other videos where people might want to
-            quickly jump to certain parts.
+            For those who don’t know, on YouTube, a timestamp is a link that can
+            be clicked on to go to a certain point in a video. {`It's`}{' '}
+            basically a time marker that points to a certain part of the video.
+            Timestamps are often used in tutorials, long videos, and other
+            videos where people might want to quickly jump to certain parts.
           </p>
           <h2 className="text-xl mt-6 font-bold text-[#dc2626] max-w-[620px]">
             Time stamps can be used in two main ways on YouTube:
@@ -380,15 +379,17 @@ export default function RootLayout({ children }) {
               </div>
             ))}
           </ul>
-          <p className="text-sm mx-4 text-primary">
+          <p className="text-base mx-4 text-primary">
             When you save your video, it will have chapters that viewers can
             click on to go to different parts. For longer videos in particular,
-            this can make the watching experience a lot better.
+            this can make the watching experience a lot better. So, basically,
+            chapters are added automatically by YouTube, as long as you provide
+            the correct format in the video description.
           </p>
           <h2 className="text-xl mt-6 font-bold text-[#dc2626] max-w-[620px]">
             Adding timestamps manually takes a lot of time.
           </h2>
-          <p className="text-sm text-primary">
+          <p className="text-base text-primary">
             Manual Timestamping and creating chapters give you full control but
             it is very time consuming. There are many reasons to avoid adding
             Timestamp to YouTube video by your self.
@@ -407,26 +408,20 @@ export default function RootLayout({ children }) {
               </div>
             ))}
           </ul>
-          <p className="text-sm text-primary">
+          <p className="text-base text-primary">
             Even though it takes more effort, manually timestamping gives you
             complete control over where your chapters go and what they are
             about.
           </p>
-          <p className="text-sm text-primary">
+          <p className="text-base text-primary">
             If you have a short video or prefer a hands-on approach, it can be a
             good option. For longer videos, though, or if you want a quick and
             easy answer, you should use an{' '}
             <Link href="#home" className="text-[#dc2626]">
-              automatic tool like TubeChapters.
+              automatic tool like TubeChapters. And for free! .
             </Link>{' '}
-            .
           </p>
-          <Link
-            href={'#home'}
-            className="btn bg-[#dc2626] px-4 py-3 text-back font-normal text-base rounded-xl max-w-[250px] self-center min-w-[140px]"
-          >
-            Generate YouTube Chapters
-          </Link>
+
           <Link
             href={'#home'}
             className="text-xl mt-6 font-bold text-[#dc2626] max-w-[620px]"
@@ -442,9 +437,10 @@ export default function RootLayout({ children }) {
           </p>
           <p className="text-base text-primary">
             TubeChapters allows you to easily add chapters to YouTube videos.
-            Simply paste your video URL, choose a language, and let our AI do
-            the rest. You may also adjust the chapter titles and timestamps to
-            ensure that they exactly match your content.
+            Simply paste your video URL, choose a language, the complexity
+            level, and let our AI do the rest. You may also adjust the chapter
+            titles and timestamps to ensure that they exactly match your
+            content. However, the tool is quite accurate.
           </p>
           <p className="text-base text-primary">
             <Link href="#home" className="text-[#dc2626]">
@@ -455,12 +451,21 @@ export default function RootLayout({ children }) {
           </p>
           <p className="text-base text-primary">
             Are you ready to transform your YouTube videos into easily
-            accessible pieces of information? Try TubeChapters today and see how
-            it{' '}
+            accessible pieces of information? Try{' '}
+            <Link href="#home" className="text-[#dc2626]">
+              TubeChapters
+            </Link>{' '}
+            today and see how it{' '}
             <span className="font-bold">
               improves your viewership and channel growth!
             </span>
           </p>
+          <Link
+            href={'#home'}
+            className="btn bg-[#dc2626] px-4 py-3 text-back font-normal text-base rounded-xl max-w-[250px] self-center min-w-[140px]"
+          >
+            Generate YouTube Chapters
+          </Link>
           <h2 className="text-xl mt-6 font-bold text-[#dc2626] max-w-[620px]">
             Why Should I Use TubeChapters to Automatically Create Chapters and
             Add TimeStamps?
@@ -496,13 +501,22 @@ export default function RootLayout({ children }) {
             reach more people.
           </p>
           <p className="text-base text-primary">
-            Start with{' '}
+            So, feel free to start with{' '}
             <Link href="#home" className="text-[#dc2626]">
               TubeChapters
             </Link>{' '}
-            {`it's easy and quick to improve your video's`} right now and see
-            how we can improve your YouTube channel.
+            right now and see how it can{' '}
+            <span className="font-bold">
+              improve your YouTube channel, and create accurate chapters for you
+              in a snap.
+            </span>
           </p>
+          <Link
+            href={'#home'}
+            className="btn bg-[#dc2626] px-4 py-3 text-back font-normal text-base rounded-xl max-w-[250px] self-center min-w-[140px]"
+          >
+            Generate YouTube Chapters
+          </Link>
           <h2 className="text-xl mt-6 font-bold text-[#dc2626] max-w-[620px]">
             TubeChapters Goes Global.
           </h2>
