@@ -244,6 +244,9 @@ export default function RootLayout({ children }) {
   ];
   return (
     <html lang="en">
+      <head>
+        <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
+      </head>
       <body className={`${raleway.className} md:px-16 px-2 bg-back`}>
         <Link
           href={'#home'}
