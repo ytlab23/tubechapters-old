@@ -1,4 +1,4 @@
-## Tubechapters
+## TubeChapters - Create And Add Chapters To Your YouTube Videos - Automated Chapters
 
 Welcome to TubeChapters, the ultimate tool for enhancing your YouTube
 experience! We empower you to create captions and timestamps for YouTube
