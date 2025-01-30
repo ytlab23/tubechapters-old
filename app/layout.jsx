@@ -71,14 +71,14 @@ export default function RootLayout({ children }) {
         "Make your video better for your viewers with TubeChapters! It's easy for viewers to find the chapters that they want to watch because each chapter has a clear title and timestamp. They don't have to look through the entire video to find what they want to watch. This keeps people interested and makes them watch longer, which makes them pleased and makes your content more fun to watch. Also, captions help viewers understand what they are watching if they might miss anything because of background noise or language barriers.",
     },
     {
-      title: 'Increase Search Engine Optimization',
+      title: 'They Will Also Increase SEO',
       content:
-        "With TubeChapters, you can make your YouTube videos more SEO-friendly. Search engines use the keywords and context that we create in the captions to figure out what your video is about. This makes your video rank higher in search results for related keywords, which brings in new viewers organically. This attracts viewers who are actively searching for topics covered in your video. The higher your ranking, the more organic growth you'll receive, potentially leading to an increase in views and subscriptions. TubeChapters makes it easy for the right people to find your videos.",
+        "With TubeChapters, you can make your YouTube videos more SEO-friendly. Search engines use the keywords and context that we create in the captions to figure out what your video is about. This makes your video rank higher in search results for related keywords, which brings in new viewers organically. This attracts viewers who are actively searching for topics covered in your video. The higher your ranking, the more organic growth you'll receive, potentially leading to an increase in views and subscriptions. TubeChapters makes it easy for the right people to find your videos. To further improve your YouTube rankings, consider using SEO tools such as TubePilot (free).",
     },
     {
       title: 'Make Your Video Easily Accessible',
       content:
-        "With TubeChapters, you can break down barriers and make your content accessible to everyone. TubeChapters' captions and timestamps aren't just for your convenience; they're also very important for accessibility. Captions are very important for people who are deaf or hard of hearing to understand what's going on in the video. They can read the caption while watching and make sure they don't miss any funny parts or important information. Timestamps make things even easier. Imagine someone quickly looking through a long description of a video to find a certain point they need to go over again. With timestamps, all they have to do is click on the chapter title to go straight to that part. This gives viewers the ability to fully interact with your content, making your video more accessible for everyone.",
+        "With TubeChapters, you can break down barriers and make your content accessible to everyone. TubeChapters' captions and timestamps aren't just for your convenience; they're also very important for accessibility. Captions are very important for people who are deaf or hard of hearing to understand what's going on in the video. They can read the caption while watching and make sure they don't miss any funny parts or important information. Timestamps make things even easier. Imagine someone quickly looking through a long description of a video to find a certain point they need to go over again. With timestamps, all they have to do is click on the chapter title to go straight to that part. This gives viewers the ability to fully interact with your content, making your video more accessible for everyone. For increased accessibility, consider also translating your content into multiple languages and adding subtitles.",
     },
     {
       title: 'Increased Visibility and Brand Recognition',
@@ -100,7 +100,7 @@ export default function RootLayout({ children }) {
   const howToAddChaptersManually = [
     {
       title: 'Go to YouTube Studio and sign in:',
-      content: 'Sign in to your YouTube account at studio.youtube.com.',
+      content: 'Sign in to your YouTube account at studio.youtube.com.'
     },
     {
       title: 'Pick out your video:',
@@ -194,8 +194,8 @@ export default function RootLayout({ children }) {
   const faqsDownsData = [
     {
       title: '1. What is TubeChapters and what does it do?',
-      content:
-        'TubeChapters is a tool that helps you create chapters and timestamps for your YouTube videos. It uses AI to automate the process, saving you time and effort. Additionally, TubeChapters offers features to generate video descriptions, hashtags, and titles.',
+      content: '<a href="https://tubepilot.com" target="_blank" rel="noopener noreferrer">TubeChapters is a tool that helps you create chapters and timestamps for your YouTube videos.</a> It uses AI to automate the process, saving you time and effort. Additionally, TubeChapters offers features to generate video descriptions, hashtags, and titles.',
+      isHTML: true
     },
     {
       title: '2. Is TubeChapters easy to use?',
@@ -230,7 +230,8 @@ export default function RootLayout({ children }) {
     },
     {
       title: '8. How do I create chapters with TubeChapters?',
-      content: `Simply paste the URL of your YouTube video into TubeChapters. Choose the language and click "Generate." You can also select the complexity level for the captions. Then, our AI will automatically create timestamps for key points in your video. You can then customize these timestamps and add clear, descriptive chapter titles.`,
+      content: `Simply paste the URL of your YouTube video into <a href="https://tubepilot.com" target="_blank" rel="noopener noreferrer">TubeChapters</a>. Choose the language and click "Generate." You can also select the complexity level for the captions. Then, our AI will automatically create timestamps for key points in your video. You can then customize these timestamps and add clear, descriptive chapter titles.`,
+      isHTML: true
     },
     {
       title: '9. In what languages does TubeChapters work?',
@@ -284,25 +285,16 @@ export default function RootLayout({ children }) {
             TubeChapters Creates Chapters with AI
           </h2>
           <p className="text-base text-primary">
-            Stop doing all that boring work manually! TubeChapters uses AI to
-            generate YouTube chapters for you. Just add your YouTube video URL
-            and our advanced technology will automatically create timestamps for
-            important parts of your video.
+          Stop doing all that boring work manually! <a href="https://tubechapters.com/">TubeChapters</a> uses AI and <a href="https://developers.google.com/youtube/v3">YouTube API</a> to generate YouTube chapters for you. Just add your YouTube video URL and our advanced technology will automatically create timestamps for important parts of your video. 
           </p>
           <p className="text-base text-primary">
-            This helps you avoid the time-consuming task of transcription, so
-            you can concentrate on producing high-quality content. After that,
-            you can improve these timestamps and add detailed titles to make the
-            video look more professional and make it easier for people to
-            navigate easily in your video.
+          This helps you avoid the time-consuming task of transcription, so you can concentrate on producing high-quality content. After that, you can improve these timestamps and add detailed titles to make the video look more professional and make it easier for people to navigate easily in your video.
           </p>
           <HowItWorks />
           <AboutBoxContainer items={howItWorksItems} />
           <p className="text-base text-primary text-center m-4">
             And no need for a{' '}
-            <span className="text-[#dc2626]">credit card!</span> Start with
-            TubeChapters{`'`} free plan and see how powerful it is to make
-            chapters quickly and easily.
+            <span className="text-[#dc2626]">credit card!</span> <a href="https://tubechapters.com/">Use TubeChapters for free</a> and see how powerful it is to make chapters quickly and easily.
           </p>
           <Link
             href={'#home'}
@@ -316,7 +308,7 @@ export default function RootLayout({ children }) {
             Next Level
           </h2>
           <p className="text-base text-primary">
-            Adding chapters to your YouTube videos is a simple yet powerful way
+            <a href="https://tubechapters.com/">Adding chapters to your YouTube videos</a> is a simple yet powerful way
             to improve the viewing experience, improve your SEO, and grow your
             YouTube channel. With tools like TubeChapters, you can{' '}
             <Link href="#home" className="text-[#dc2626]">
@@ -325,7 +317,7 @@ export default function RootLayout({ children }) {
             effortlessly and start receiving the benefits in no time.
           </p>
           <p className="text-base text-primary">
-            For those who don’t know, on YouTube, a timestamp is a link that can
+            For those who don’t know, on YouTube, <a href="https://support.google.com/youtube/answer/9884579?hl=en">a timestamp</a> is a link that can
             be clicked on to go to a certain point in a video. {`It's`}{' '}
             basically a time marker that points to a certain part of the video.
             Timestamps are often used in tutorials, long videos, and other
@@ -420,7 +412,7 @@ export default function RootLayout({ children }) {
             If you have a short video or prefer a hands-on approach, it can be a
             good option. For longer videos, though, or if you want a quick and
             easy answer, you should use an{' '}
-            <Link href="#home" className="text-[#dc2626]">
+            <Link href="https://tubechapters.com/" className="text-[#dc2626]">
               automatic tool like TubeChapters. And for free! .
             </Link>{' '}
           </p>
@@ -454,14 +446,8 @@ export default function RootLayout({ children }) {
           </p>
           <p className="text-base text-primary">
             Are you ready to transform your YouTube videos into easily
-            accessible pieces of information? Try{' '}
-            <Link href="#home" className="text-[#dc2626]">
-              TubeChapters
-            </Link>{' '}
-            today and see how it{' '}
-            <span className="font-bold">
-              improves your viewership and channel growth!
-            </span>
+            accessible pieces of information? Try
+              TubeChapters and see how it improves your viewership and channel growth and <a href="https://tubechapters.com/">generate YouTube chapters for free!</a>
           </p>
           <Link
             href={'#home'}
@@ -514,12 +500,6 @@ export default function RootLayout({ children }) {
               in a snap.
             </span>
           </p>
-          <Link
-            href={'#home'}
-            className="btn bg-[#dc2626] px-4 py-3 text-back font-normal text-base rounded-xl max-w-[250px] self-center min-w-[140px]"
-          >
-            Generate YouTube Chapters
-          </Link>
           <h2 className="text-xl mt-6 font-bold text-[#dc2626] max-w-[620px]">
             TubeChapters Goes Global.
           </h2>
@@ -552,7 +532,7 @@ export default function RootLayout({ children }) {
             everyone around the world. With {`TubeChapters's`} support for
             multiple languages, you can share your knowledge, interest, and
             creativity with people all over the world, and optimize your videos
-            for YouTube SEO in multiple languages.
+            for <a href="https://blog.hootsuite.com/youtube-seo/">YouTube SEO</a> in multiple languages.
           </p>
           <Link
             href={'#home'}

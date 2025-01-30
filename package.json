@@ -11,6 +11,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.11.3",
     "axios": "^1.6.8",
+    "deepseek-api": "^1.0.6",
     "https-proxy-agent": "^7.0.4",
     "jsdom": "^24.0.0",
     "next": "14.2.3",
