@@ -4,6 +4,7 @@ import Nav from '@/components/Nav';
 import AboutBoxContainer from '@/components/AboutBoxContainer';
 import HowItWorks from '@/components/HowItWorks';
 import Link from 'next/link';
+import ContentRenderer from '@/components/ContentRenderer';
 import { BiUpArrowAlt } from 'react-icons/bi';
 import DropDowns from '@/components/DropDowns';
 
@@ -73,7 +74,7 @@ export default function RootLayout({ children }) {
     {
       title: 'They Will Also Increase SEO',
       content:
-        "With TubeChapters, you can make your YouTube videos more SEO-friendly. Search engines use the keywords and context that we create in the captions to figure out what your video is about. This makes your video rank higher in search results for related keywords, which brings in new viewers organically. This attracts viewers who are actively searching for topics covered in your video. The higher your ranking, the more organic growth you'll receive, potentially leading to an increase in views and subscriptions. TubeChapters makes it easy for the right people to find your videos. To further improve your YouTube rankings, consider using SEO tools such as <a href='https://tubepilot.com' target='_blank' rel='noopener noreferrer'>TubePilot (free).</a>  ",
+        "With TubeChapters, you can make your YouTube videos more SEO-friendly. Search engines use the keywords and context that we create in the captions to figure out what your video is about. This makes your video rank higher in search results for related keywords, which brings in new viewers organically. This attracts viewers who are actively searching for topics covered in your video. The higher your ranking, the more organic growth you'll receive, potentially leading to an increase in views and subscriptions. TubeChapters makes it easy for the right people to find your videos. To further improve your YouTube rankings, consider using SEO tools such as <a href='https://tubepilot.com' target='_blank' rel='noopener noreferrer' className='text-[#dc2626]'>TubePilot</a>  (free). ",
         isHTML: true
     },
     {
@@ -102,7 +103,8 @@ export default function RootLayout({ children }) {
   const howToAddChaptersManually = [
     {
       title: 'Go to YouTube Studio and sign in:',
-      content: 'Sign in to your YouTube account at studio.youtube.com.'
+      content: 'Sign in to your YouTube account at <a href="http://studio.youtube.com/" target="_blank" rel="noopener noreferrer">studio.youtube.com</a>.',
+      isHTML: true
     },
     {
       title: 'Pick out your video:',
@@ -196,7 +198,7 @@ export default function RootLayout({ children }) {
   const faqsDownsData = [
     {
       title: '1. What is TubeChapters and what does it do?',
-      content: '<a href="https://tubepilot.com" target="_blank" rel="noopener noreferrer">TubeChapters is a tool that helps you create chapters and timestamps for your YouTube videos.</a> It uses AI to automate the process, saving you time and effort. Additionally, TubeChapters offers features to generate video descriptions, hashtags, and titles.',
+      content: '<a href="https://tubechapters.com/" target="_blank" rel="noopener noreferrer">TubeChapters is a tool that helps you create chapters and timestamps for your YouTube videos.</a> It uses AI to automate the process, saving you time and effort. Additionally, TubeChapters offers features to generate video descriptions, hashtags, and titles.',
       isHTML: true
     },
     {
@@ -232,7 +234,7 @@ export default function RootLayout({ children }) {
     },
     {
       title: '8. How do I create chapters with TubeChapters?',
-      content: `Simply paste the URL of your YouTube video into <a href="https://tubepilot.com" target="_blank" rel="noopener noreferrer">TubeChapters</a>. Choose the language and click "Generate." You can also select the complexity level for the captions. Then, our AI will automatically create timestamps for key points in your video. You can then customize these timestamps and add clear, descriptive chapter titles.`,
+      content: `Simply paste the URL of your YouTube video into <a href="https://tubechapters.com/" target="_blank" rel="noopener noreferrer">TubeChapters</a>. Choose the language and click "Generate." You can also select the complexity level for the captions. Then, our AI will automatically create timestamps for key points in your video. You can then customize these timestamps and add clear, descriptive chapter titles.`,
       isHTML: true
     },
     {
@@ -296,7 +298,7 @@ export default function RootLayout({ children }) {
           <AboutBoxContainer items={howItWorksItems} />
           <p className="text-base text-primary text-center m-4">
             And no need for a{' '}
-            <span className="text-[#dc2626]">credit card!</span> <a href="https://tubechapters.com/">Use TubeChapters for free</a> and see how powerful it is to make chapters quickly and easily.
+            credit card! <a href="https://tubechapters.com/">Use TubeChapters for free</a> and see how powerful it is to make chapters quickly and easily.
           </p>
           <Link
             href={'#home'}
@@ -313,9 +315,7 @@ export default function RootLayout({ children }) {
             <a href="https://tubechapters.com/">Adding chapters to your YouTube videos</a> is a simple yet powerful way
             to improve the viewing experience, improve your SEO, and grow your
             YouTube channel. With tools like TubeChapters, you can{' '}
-            <Link href="#home" className="text-[#dc2626]">
               create chapters
-            </Link>{' '}
             effortlessly and start receiving the benefits in no time.
           </p>
           <p className="text-base text-primary">
@@ -358,9 +358,7 @@ export default function RootLayout({ children }) {
                   <span className="text-base font-bold text-left text-primary">
                     {item.title}
                   </span>
-                  <p className="text-base text-left text-primary/90">
-                    {item.content}
-                  </p>
+                  <ContentRenderer content={item.content} isHTML={item.isHTML} />
                   {item.list && (
                     <ul className="my-2 ml-5 flex flex-col gap-y-3 list-disc">
                       {item.list?.map((item) => (
@@ -413,10 +411,11 @@ export default function RootLayout({ children }) {
           <p className="text-base text-primary">
             If you have a short video or prefer a hands-on approach, it can be a
             good option. For longer videos, though, or if you want a quick and
-            easy answer, you should use an{' '}
+            easy answer, you should use an automatic tool like{' '}
             <Link href="https://tubechapters.com/" className="text-[#dc2626]">
-              automatic tool like TubeChapters. And for free! .
+              TubeChapters.
             </Link>{' '}
+            And for free!
           </p>
 
           <Link
@@ -426,9 +425,8 @@ export default function RootLayout({ children }) {
             TubeChapters: Your AI-Powered Chapter Creator
           </Link>
           <p className="text-base text-primary">
-            <Link href="#home" className="text-[#dc2626]">
               TubeChapters
-            </Link>{' '}
+           
             is a one stop solution that uses artificial intelligence to create
             chapters for your YouTube videos.
           </p>
@@ -440,9 +438,8 @@ export default function RootLayout({ children }) {
             content. However, the tool is quite accurate.
           </p>
           <p className="text-base text-primary">
-            <Link href="#home" className="text-[#dc2626]">
               TubeChapters
-            </Link>{' '}
+           
             can also help you with other elements of video for search engine
             optimization, such as creating titles, descriptions, and keywords.
           </p>
@@ -462,9 +459,8 @@ export default function RootLayout({ children }) {
             Add TimeStamps?
           </h2>
           <p className="text-base text-primary">
-            <Link href="#home" className="text-[#dc2626]">
               TubeChapters.com
-            </Link>{' '}
+           
             provides an easy way to speed up the process and gain a number of
             benefits.
           </p>
@@ -485,17 +481,14 @@ export default function RootLayout({ children }) {
           <p className="text-base text-primary">
             Adding chapters and time stamps to your YouTube videos is no longer
             a hassle.With{' '}
-            <Link href="#home" className="text-[#dc2626]">
-              TubeChapters.com
-            </Link>{' '}
-            {`it's easy and quick to improve your video's`} performance and
+              TubeChapters.com 
+         
+            {` it's easy and quick to improve your video's`} performance and
             reach more people.
           </p>
           <p className="text-base text-primary">
             So, feel free to start with{' '}
-            <Link href="#home" className="text-[#dc2626]">
               TubeChapters
-            </Link>{' '}
             right now and see how it can{' '}
             <span className="font-bold">
               improve your YouTube channel, and create accurate chapters for you
@@ -527,9 +520,7 @@ export default function RootLayout({ children }) {
             ))}
           </ul>
           <p className="text-base text-primary">
-            <Link href="#home" className="text-[#dc2626]">
               TubeChapters
-            </Link>{' '}
             gives you the tools to make content that is interesting and open to
             everyone around the world. With {`TubeChapters's`} support for
             multiple languages, you can share your knowledge, interest, and
