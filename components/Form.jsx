@@ -4,7 +4,7 @@ import CopyHandler from './CopyHandler';
 import ResultContainer from './ResultContainer';
 import Select from 'react-select';
 
-const Form = ({ getSummery }) => {
+const Form = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState('');
@@ -36,6 +36,57 @@ const Form = ({ getSummery }) => {
   const languageHandler = (option) => {
     setLanguage(option.value);
   };
+
+  const fetchSummary = async (url, chapterType, language) => {
+    try {
+      const response = await fetch('https://ytaichapters.onrender.com/api/summary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url: url, 
+          chapterType: chapterType, 
+          sumLang: language  }),
+      });
+      const data = await response.json();
+      
+      if (response.ok) {
+        return data;
+      } else {
+        return data.error;
+      }
+    } catch (error) {
+      return 'An error occurred while processing your request';
+    }
+  };
+
+  const handleGenerate = async () => {
+    if (url !== '') {
+      setError(false);
+      setCopyText('Copy');
+      setDescText('Copy');
+      setShowDesc(false);
+      setData([]);
+      setLoading(true);
+      
+      const data = await fetchSummary(url.trim(), chapterType, language);
+      
+      if (typeof data !== 'string') {
+        setLoading(false);
+        setError(false);
+        setDesc(data.summery);
+        setData(data.chapters);
+      } else {
+        setLoading(false);
+        setError(true);
+        setErrorText(data);
+      }
+    } else {
+      setError(true);
+      setErrorText('Please provide a link');
+    }
+  };
+
   return (
     <div className="flex flex-col gap-y-4 mt-24">
       <h2 className="text-base text-primary">Add your YouTube URL 👇</h2>
@@ -61,30 +112,7 @@ const Form = ({ getSummery }) => {
       <div className="flex justify-center gap-x-4">
         <button
           className="btn bg-[#dc2626] px-4 py-3 text-back font-normal text-base rounded-xl max-w-[250px] self-center min-w-[140px]"
-          onClick={async () => {
-            if (url !== '') {
-              setError(false);
-              setCopyText('Copy');
-              setDescText('Copy');
-              setShowDesc(false);
-              setData([]);
-              setLoading(true);
-              let data = await getSummery(url.trim(), chapterType, language);
-              if (typeof data !== 'string') {
-                setLoading(false);
-                setError(false);
-                setDesc(data.summery);
-                setData(data.chapters);
-              } else {
-                setLoading(false);
-                setError(true);
-                setErrorText(data);
-              }
-            } else {
-              setError(true);
-              setErrorText('Please provide a link');
-            }
-          }}
+          onClick={handleGenerate}
         >
           {loading ? (
             <span className="loader"></span>

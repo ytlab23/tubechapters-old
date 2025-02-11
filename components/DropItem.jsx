@@ -28,7 +28,13 @@ const DropItem = ({ item }) => {
         )}
       </div>
       {expand && (
-        <p className="ml-3 text-sm text-left text-primary">{item.content}</p>
+        <div className="ml-3 text-sm text-left text-primary">
+          {item.isHTML ? (
+            <div dangerouslySetInnerHTML={{ __html: item.content }} />
+          ) : (
+            item.content
+          )}
+        </div>
       )}
     </div>
   );

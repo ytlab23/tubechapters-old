@@ -1,15 +1,14 @@
-import jsdom from 'jsdom';
+import jsdom from "jsdom";
 const { JSDOM } = jsdom;
-import xml2js from 'xml2js';
-import { HttpsProxyAgent } from 'https-proxy-agent';
-import axios from 'axios';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import xml2js from "xml2js";
+import { HttpsProxyAgent } from "https-proxy-agent";
+import axios from "axios";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const API_KEY_1 = process.env.GEMINI_API_KEY_1;
 const API_KEY_2 = process.env.GEMINI_API_KEY_2;
 const API_KEY_3 = process.env.GEMINI_API_KEY_3;
 const API_KEY_4 = process.env.GEMINI_API_KEY_4;
-const API_KEY_5 = process.env.GEMINI_API_KEY_5;
 const API_KEY_6 = process.env.GEMINI_API_KEY_6;
 
 // request time delyer function
@@ -17,7 +16,7 @@ const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 // get data
 export const get_data_axios = async (url) => {
-  'use server';
+  "use server";
   try {
     // making a delay before a request
     await delay(3000);
@@ -32,7 +31,7 @@ export const get_data_axios = async (url) => {
 
     return data;
   } catch (error) {
-    console.error('get data error --->', error);
+    console.error("get data error --->", error);
     throw new Error(`Invalid link or error while fetching please try again`);
   }
 };
@@ -48,12 +47,11 @@ export const geminiResponseHandler = async (
     API_KEY_2,
     API_KEY_3,
     API_KEY_4,
-    API_KEY_5,
     API_KEY_6,
   ];
   const API_KEY = API_KEYS[Math.floor(Math.random() * API_KEYS.length)];
   const genAI = new GoogleGenerativeAI(API_KEY);
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   const promptWithLangSimple = `
   Task: Convert Video Transcript Segment into YouTube-Like Chapters (Language: ${sumLang})
@@ -95,7 +93,7 @@ Return the response in the following format:
   `;
 
   const prompt =
-    generateType === 'summary' ? summeryPrompt : promptWithLangSimple;
+    generateType === "summary" ? summeryPrompt : promptWithLangSimple;
 
   const result = await model.generateContent(prompt);
   const response = result.response;
@@ -105,18 +103,20 @@ Return the response in the following format:
 
 // generate chapters from gpt
 export const generateSummary = async (subtitles, chapterType, sumLang) => {
-  'use server';
+  "use server";
+  // subtitles.map((sub) => console.log(sub.length));
   try {
-    let gptResponses = { chapters: [], summery: '' };
+    let gptResponses = { chapters: [], summery: "" };
     for (let sub of subtitles) {
+      // console.log("subString", subString, subString.length);
       let gptResponse = await geminiResponseHandler(
         sub,
-        'chapter',
+        "chapter",
         chapterType,
         sumLang
       );
-      const first = gptResponse.indexOf('{');
-      const last = gptResponse.indexOf('}');
+      const first = gptResponse.indexOf("{");
+      const last = gptResponse.indexOf("}");
       gptResponse = gptResponse.slice(first, last + 1);
       gptResponse = JSON.parse(gptResponse);
       gptResponses.chapters.push(...gptResponse.chapters);
@@ -125,7 +125,7 @@ export const generateSummary = async (subtitles, chapterType, sumLang) => {
 
     const videoSummary = await geminiResponseHandler(
       gptResponses.summery,
-      'summary',
+      "summary",
       chapterType,
       sumLang
     );
@@ -135,14 +135,14 @@ export const generateSummary = async (subtitles, chapterType, sumLang) => {
     return gptResponses;
     // return gptResponse;
   } catch (error) {
-    console.log('not subtitles was found');
+    console.log("not subtitles was found");
     throw new Error(`${error.message}`);
   }
 };
 
 // fetch transcript from youtube
 export const fetchTranscript = async (url) => {
-  'use server';
+  "use server";
   try {
     const isValidYouTubeUrl = (url) => {
       const pattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
@@ -158,18 +158,18 @@ export const fetchTranscript = async (url) => {
 
     const html = await get_data_axios(url);
     const dom = new JSDOM(html);
-    const scripts = dom.window.document.querySelectorAll('script');
+    const scripts = dom.window.document.querySelectorAll("script");
 
     let captions = [];
 
     for (let script of scripts) {
-      if (script.innerHTML.includes('captionTracks')) {
-        const start = script.innerHTML.indexOf('captionTracks');
-        const end = script.innerHTML.indexOf(']', start);
+      if (script.innerHTML.includes("captionTracks")) {
+        const start = script.innerHTML.indexOf("captionTracks");
+        const end = script.innerHTML.indexOf("]", start);
 
         const jsonString = script.innerHTML
           .slice(start, end + 1)
-          .replace('captionTracks":', '');
+          .replace('captionTracks":', "");
         captions = JSON.parse(jsonString);
         break;
       }
@@ -183,52 +183,52 @@ export const fetchTranscript = async (url) => {
       let subtitle = [];
       xml2js.parseString(subtitles_data, async (err, result) => {
         if (err) {
-          console.log('xml2js parse error --->', err);
-          return 'Error parsing XML.';
+          console.log("xml2js parse error --->", err);
+          return "Error parsing XML.";
         } else {
           let maxSecond = 1000;
           let arr = [];
-          let cutedArr = '';
+          let cutedArr = "";
           result.transcript.text.forEach((item) => {
             const totalSeconds = Math.floor(Number(item.$.start));
             const hours = Math.floor(totalSeconds / 3600);
             const minutes = Math.floor((totalSeconds - hours * 3600) / 60);
             const remainingSeconds = Math.round(totalSeconds % 60);
 
-            const time = `${hours < 10 ? '0' : ''}${hours}:${
-              minutes < 10 ? '0' : ''
-            }${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+            const time = `${hours < 10 ? "0" : ""}${hours}:${
+              minutes < 10 ? "0" : ""
+            }${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
             const lines = item._;
+            // console.log(maxSecond);
+
+            // console.log({ time, lines });
 
             if (totalSeconds < maxSecond) {
               cutedArr += `${time} ${lines}. `;
               cutedArr = cutedArr.replace(/&#39;/g, "'");
             } else {
               arr.push(cutedArr);
-              cutedArr = '';
+              cutedArr = "";
               maxSecond += 1000;
             }
           });
           if (cutedArr.length > 12000) {
             arr.push(cutedArr);
           } else {
-            if (arr.length === 0) {
-              arr[arr.length] = cutedArr;
-            } else {
-              arr[arr.length - 1] = arr[arr.length - 1] + cutedArr;
-            }
+            arr[arr.length - 1] = arr[arr.length - 1] + cutedArr;
           }
 
           subtitle = arr;
         }
       });
+
       return subtitle;
     } else {
-      console.log('No captions avaliable for this page');
-      throw new Error('No captions Found');
+      console.log("No captions avaliable for this page");
+      throw new Error("No captions Found");
     }
   } catch (error) {
-    console.error('Invalid link or error while fetching', error.message);
+    console.error("Invalid link or error while fetching", error.message);
     throw new Error(`${error.message}`);
     // return "caption parse error";
   }
@@ -236,13 +236,13 @@ export const fetchTranscript = async (url) => {
 
 //get summery
 export const getSummery = async (url, chapterType, sumLang) => {
-  'use server';
+  "use server";
   try {
     const transcript = await fetchTranscript(url);
-    // const summary = await generateSummary(transcript, chapterType, sumLang);
+    const summary = await generateSummary(transcript, chapterType, sumLang);
     return summary;
   } catch (error) {
-    console.log('getSummery error -->', error.message);
+    console.log("getSummery error -->", error.message);
     return error.message;
   }
 };
