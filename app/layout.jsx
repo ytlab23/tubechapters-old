@@ -74,7 +74,7 @@ export default function RootLayout({ children }) {
     {
       title: 'They Will Also Increase SEO',
       content:
-        "With TubeChapters, you can make your YouTube videos more SEO-friendly. Search engines use the keywords and context that we create in the captions to figure out what your video is about. This makes your video rank higher in search results for related keywords, which brings in new viewers organically. This attracts viewers who are actively searching for topics covered in your video. The higher your ranking, the more organic growth you'll receive, potentially leading to an increase in views and subscriptions. TubeChapters makes it easy for the right people to find your videos. To further improve your YouTube rankings, consider using SEO tools such as <a href='https://tubepilot.com' target='_blank' rel='noopener noreferrer' className='text-[#dc2626]'>TubePilot</a>  (free). ",
+        "With TubeChapters, you can make your YouTube videos more SEO-friendly. Search engines use the keywords and context that we create in the captions to figure out what your video is about. This makes your video rank higher in search results for related keywords, which brings in new viewers organically. This attracts viewers who are actively searching for topics covered in your video. The higher your ranking, the more organic growth you'll receive, potentially leading to an increase in views and subscriptions. TubeChapters makes it easy for the right people to find your videos. To further improve your YouTube rankings, consider using SEO tools such as <a href='https://tubepilot.ai' target='_blank' rel='noopener noreferrer' className='text-[#dc2626]'>TubePilot</a>  (free). ",
         isHTML: true
     },
     {
